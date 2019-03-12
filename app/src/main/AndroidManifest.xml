@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- Display notification drawer -->
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" /> <!-- Ability to uninstall an app from launcher -->
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
 
     <uses-feature
         android:name="android.hardware.telephony"
@@ -50,6 +51,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="user"
             android:stateNotNeeded="true"
+            android:theme="@style/AppTheme.HomeScreen"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -79,11 +81,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".activities.BackgroundChooserActivity"
-            android:label="@string/change_background"
-            android:theme="@style/Theme.AppCompat" />
 
         <meta-data
             android:name="android.max_aspect"

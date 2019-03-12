@@ -16,16 +16,7 @@
     <string name="pref_default_display_name">John Smith</string>
 
     <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
-    <string-array name="pref_example_list_titles">
-        <item>Always</item>
-        <item>When possible</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_example_list_values">
-        <item>1</item>
-        <item>0</item>
-        <item>-1</item>
-    </string-array>
+
 
     <!-- Example settings for Data & Sync -->
     <string name="pref_header_data_sync">Data &amp; sync</string>
@@ -87,4 +78,22 @@
     <string name="settings">Settings</string>
     <string name="change_background">Change Background</string>
     <string name="okay">Okay</string>
+    <string name="pref_title_show_all_apps">Show All Apps</string>
+    <string name="pref_description_show_all_apps">If true, Applications with no default launch Intent are visible.</string>
+    <string name="pref_title_black_apps_icon">Use Black Apps Icon</string>
+    <string name="pref_description_black_apps_icon">If selected, the \"all apps\" button will be black instead of white.</string>
+    <string name="pref_title_change_wallpaper">Change Wallpaper</string>
+    <string name="pref_description_change_wallpaper">Opens Android\'s wallpaper change dialog.</string>
+    <string name="cancel">Cancel</string>
+    <string name="pref_title_app_icon_type">App icon type</string>
+    <string name="pref_description_app_icon_type">Determines which icon is shown on the main view.</string>
+
+    <string-array name="pref_app_icon_type_titles">
+        <item>Widgets</item>
+        <item>Applications</item>
+    </string-array>
+    <string-array name="pref_app_icon_type_values">
+        <item>1</item>
+        <item>0</item>
+    </string-array>
 </resources>

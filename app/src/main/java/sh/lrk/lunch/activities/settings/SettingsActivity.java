@@ -27,9 +27,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Col
     public static final String KEY_LAUNCHER_BACKGROUND = "launcher_background";
     public static final String KEY_LAUNCHER_TEXT_COLOR = "launcher_text_color";
     public static final String KEY_BACKGROUND_URI = "background_uri";
+    public static final String KEY_SHOW_ALL_APPS = "show_all_apps";
+    public static final String KEY_BLACK_APPS_BTN = "black_apps_icon";
+    public static final String KEY_APP_ICON_TYPE = "app_icon_type";
 
     public static final int DEFAULT_LAUNCHER_BACKGROUND = 0x00000022;
     public static final int DEFAULT_TEXT_COLOR = 0xFFFFFFFF;
+    public static final String DEFAULT_APP_ICON_TYPE = "0";
 
     private static ColorPreference backgroundColorPreference;
     private static ColorPreference textColorPreference;

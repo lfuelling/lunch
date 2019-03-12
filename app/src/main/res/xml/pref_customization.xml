@@ -1,5 +1,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceScreen
+        android:key="change_wallpaper"
+        android:title="@string/pref_title_change_wallpaper"
+        android:summary="@string/pref_description_change_wallpaper">
+        <intent android:action="android.intent.action.SET_WALLPAPER" />
+    </PreferenceScreen>
+
     <com.github.danielnilsson9.colorpickerview.preference.ColorPreference
         android:title="@string/pref_title_launcher_background"
         android:defaultValue="0x00000022"
@@ -13,5 +20,21 @@
         android:key="launcher_text_color"
         android:id="@+id/textColorPreference"
         android:summary="@string/pref_description_launcher_text_color" />
+
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/pref_app_icon_type_titles"
+        android:entryValues="@array/pref_app_icon_type_values"
+        android:key="app_icon_type"
+        android:negativeButtonText="@string/cancel"
+        android:positiveButtonText="@string/okay"
+        android:title="@string/pref_title_app_icon_type"
+        android:summary="@string/pref_description_app_icon_type"/>
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="black_apps_icon"
+        android:summary="@string/pref_description_black_apps_icon"
+        android:title="@string/pref_title_black_apps_icon" />
 
 </PreferenceScreen>

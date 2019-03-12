@@ -1,5 +1,7 @@
 package sh.lrk.lunch.activities;
 
+import android.app.Activity;
+import android.app.WallpaperManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -24,7 +26,10 @@ import sh.lrk.lunch.R;
 import sh.lrk.lunch.activities.launcher.LauncherActivity;
 import sh.lrk.lunch.activities.settings.SettingsActivity;
 
+import static sh.lrk.lunch.activities.settings.SettingsActivity.DEFAULT_APP_ICON_TYPE;
+import static sh.lrk.lunch.activities.settings.SettingsActivity.KEY_APP_ICON_TYPE;
 import static sh.lrk.lunch.activities.settings.SettingsActivity.KEY_BACKGROUND_URI;
+import static sh.lrk.lunch.activities.settings.SettingsActivity.KEY_BLACK_APPS_BTN;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(new Intent(getApplicationContext(), LauncherActivity.class), REQUEST_CODE_LAUNCHER);
         });
 
+        setAppIconDrawable();
+
         mainView = findViewById(R.id.main_view);
 
         mainView.setOnLongClickListener(v -> {
@@ -59,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                         return true;
                     case R.id.action_background:
-                        startActivityForResult(new Intent(getApplicationContext(), BackgroundChooserActivity.class), REQUEST_CODE_BACKGROUND);
+                        startActivity(new Intent(Intent.ACTION_SET_WALLPAPER));
                         return true;
                     default:
                         return false;
@@ -71,22 +78,29 @@ public class MainActivity extends AppCompatActivity {
             popup.show();
             return true;
         });
-
-        setBackgroundIfPossible();
     }
 
-    private void setBackgroundIfPossible() {
-        String backgroundUri = defaultSharedPreferences.getString(KEY_BACKGROUND_URI, UNSET);
-        if (!UNSET.equals(backgroundUri)) {
-            Uri pickedImage = Uri.parse(backgroundUri);
-            try (InputStream imageStream = getContentResolver().openInputStream(pickedImage)) {
-                Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                mainView.setBackground(new BitmapDrawable(getResources(), selectedImage));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace(); //TODO: logging
-            } catch (IOException e) {
-                e.printStackTrace(); //TODO: logging
-            }
+    private void setAppIconDrawable() {
+        String chosenAppIconValue = defaultSharedPreferences.getString(KEY_APP_ICON_TYPE, DEFAULT_APP_ICON_TYPE);
+        int appIconType = Integer.parseInt((chosenAppIconValue == null) ? DEFAULT_APP_ICON_TYPE : chosenAppIconValue);
+        boolean useBlackAppIcon = defaultSharedPreferences.getBoolean(KEY_BLACK_APPS_BTN, false);
+
+        switch (appIconType) {
+            case 1:
+                if (useBlackAppIcon) {
+                    imageButton.setImageDrawable(getDrawable(R.drawable.ic_widgets_black_48dp));
+                } else {
+                    imageButton.setImageDrawable(getDrawable(R.drawable.ic_widgets_white_48dp));
+                }
+                break;
+            default:
+            case 0:
+                if (useBlackAppIcon) {
+                    imageButton.setImageDrawable(getDrawable(R.drawable.ic_apps_black_48dp));
+                } else {
+                    imageButton.setImageDrawable(getDrawable(R.drawable.ic_apps_white_48dp));
+                }
+                break;
         }
     }
 
@@ -94,8 +108,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_LAUNCHER && imageButton != null) {
             imageButton.setVisibility(View.VISIBLE);
-        } else if (requestCode == REQUEST_CODE_BACKGROUND && mainView != null) {
-            setBackgroundIfPossible();
         }
     }
 }

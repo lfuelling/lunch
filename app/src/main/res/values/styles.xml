@@ -12,6 +12,7 @@
         <item name="android:statusBarColor">@color/transparent</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="popupMenuStyle">@style/popupMenuStyle</item>
+        <item name="android:navigationBarColor">@color/transparent</item>
     </style>
 
     <style name="AppTheme.Launcher" parent="AppTheme">
@@ -25,5 +26,10 @@
     <style name="popupMenuStyle" parent="@style/Widget.AppCompat.PopupMenu.Overflow">
         <item name="android:dropDownHorizontalOffset">110dp</item>
         <item name="android:dropDownVerticalOffset">140dp</item>
+    </style>
+
+    <style name="AppTheme.HomeScreen" parent="AppTheme">
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowShowWallpaper">true</item>
     </style>
 </resources>

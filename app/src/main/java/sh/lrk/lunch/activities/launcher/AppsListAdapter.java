@@ -1,10 +1,14 @@
 package sh.lrk.lunch.activities.launcher;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.Parcel;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -68,7 +73,44 @@ public class AppsListAdapter extends ArrayAdapter<ApplicationInfo> {
         } else {
             appTitle.setText(packageManager.getApplicationLabel(appInfo));
             appImage.setImageDrawable(packageManager.getApplicationIcon(appInfo));
-            view.setOnClickListener(v -> getContext().startActivity(packageManager.getLaunchIntentForPackage(appInfo.packageName)));
+            Intent defaultLaunchIntent = packageManager.getLaunchIntentForPackage(appInfo.packageName);
+            Intent targetIntent = null;
+
+            if (defaultLaunchIntent != null) {
+                targetIntent = defaultLaunchIntent;
+            } else {
+                try {
+                    ActivityInfo[] activities = packageManager.getPackageInfo(appInfo.packageName, PackageManager.GET_ACTIVITIES).activities;
+                    ActivityInfo chosenActivity = null;
+                    if (activities != null) {
+                        targetIntent = new Intent(Intent.ACTION_MAIN, null);
+                        for (ActivityInfo activity : activities) {
+                            if (activity.enabled && (activity.parentActivityName == null || activity.parentActivityName.isEmpty())) {
+                                chosenActivity = activity;
+                            }
+                        }
+                        if (chosenActivity != null) {
+                            targetIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+                            final ComponentName cn = new ComponentName(appInfo.packageName, Activity.class.getName());
+                            targetIntent.setComponent(cn);
+                            targetIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        }
+                    }
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace(); //TODO: Logging (?)
+                }
+            }
+
+            final Intent fTargetIntent = targetIntent;
+            view.setOnClickListener(v -> {
+                try {
+                    if (fTargetIntent != null) {
+                        getContext().startActivity(fTargetIntent);
+                    }
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(getContext(), "No launchable activity found!", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
         return view;
