@@ -3,13 +3,16 @@ package sh.lrk.lunch.activities.launcher;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
@@ -25,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
@@ -61,58 +65,60 @@ public class AppsListAdapter extends ArrayAdapter<ApplicationInfo> {
         }
     }
 
-    @androidx.annotation.NonNull
-    private View initUi(int position, View view, boolean isConvertView) {
+    private static class AppDataTask extends AsyncTask<ApplicationInfo, Void, AppData> {
+        private final PackageManager packageManager;
+        private final String packageName;
+        private final Drawable settingsDrawable;
+        private final String settingsTitle;
+        private final AtomicReference<View> viewRef;
+        private final AtomicReference<Context> contextRef;
+        private final AtomicReference<TextView> appTitleRef;
+        private final AtomicReference<ImageView> appImageRef;
 
-        TextView appTitle = view.findViewById(R.id.appTitle);
-        ImageView appImage = view.findViewById(R.id.appIcon);
-        ApplicationInfo appInfo = AppsListAdapter.this.getItem(position);
+        public AppDataTask(Context context, View parent, TextView appTitle, ImageView appImage) {
+            this.packageName = context.getPackageName();
+            this.packageManager = context.getPackageManager();
+            this.contextRef = new AtomicReference<>(context);
 
-        if (appInfo == null) {
-            return view;
+            this.settingsDrawable = context.getDrawable(R.drawable.ic_settings_deep_purple_a700_24dp);
+            this.settingsTitle = context.getString(R.string.title_activity_settings);
+            this.viewRef = new AtomicReference<>(parent);
+            this.appTitleRef = new AtomicReference<>(appTitle);
+            this.appImageRef = new AtomicReference<>(appImage);
         }
 
-        if (isConvertView && appTitle.getText().equals(packageManager.getApplicationLabel(appInfo))) {
-            return view;
+        @Override
+        protected AppData doInBackground(ApplicationInfo... applicationInfos) {
+            ApplicationInfo appInfo = applicationInfos[0];
+            if (packageName.equals(appInfo.packageName)) {
+                // launch settings instead of launcher
+                return new AppData(settingsDrawable, settingsTitle, new Intent(contextRef.get().getApplicationContext(), SettingsActivity.class), appInfo);
+            } else {
+                Intent defaultLaunchIntent = packageManager.getLaunchIntentForPackage(appInfo.packageName);
+                Intent fTargetIntent = tryToFindDefaultIntent(appInfo, defaultLaunchIntent, packageManager);
+                return new AppData(packageManager.getApplicationIcon(appInfo), packageManager.getApplicationLabel(appInfo).toString(), fTargetIntent, appInfo);
+            }
         }
 
-        appTitle.setTextColor(appTitleColor);
-
-        if (getContext().getPackageName().equals(appInfo.packageName)) {
-            // launch settings instead of launcher
-            appTitle.setText(R.string.title_activity_settings);
-            appImage.setImageDrawable(getContext().getDrawable(R.drawable.ic_settings_deep_purple_a700_24dp));
-            view.setOnClickListener(v -> getContext().startActivity(new Intent(getContext().getApplicationContext(), SettingsActivity.class)));
-        } else {
-            appTitle.setText(packageManager.getApplicationLabel(appInfo));
-            appImage.setImageDrawable(packageManager.getApplicationIcon(appInfo));
-            Intent defaultLaunchIntent = packageManager.getLaunchIntentForPackage(appInfo.packageName);
-
-            final Intent fTargetIntent = tryToFindDefaultIntent(appInfo, defaultLaunchIntent);
-            view.setOnClickListener(v -> {
-                try {
-                    if (fTargetIntent != null) {
-                        getContext().startActivity(fTargetIntent);
-                    } else {
-                        Toast.makeText(getContext(), "No launchable activity found!", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (ActivityNotFoundException e) {
-                    Toast.makeText(getContext(), "No launchable activity found!", Toast.LENGTH_SHORT).show();
-                }
-            });
-            view.setOnLongClickListener(v -> {
-                PopupMenu popup = new PopupMenu(getContext(), v);
+        @Override
+        protected void onPostExecute(AppData appData) {
+            super.onPostExecute(appData);
+            appTitleRef.get().setText(appData.label);
+            appImageRef.get().setImageDrawable(appData.drawable);
+            viewRef.get().setOnClickListener(v -> contextRef.get().startActivity(appData.intent));
+            viewRef.get().setOnLongClickListener(v -> {
+                PopupMenu popup = new PopupMenu(contextRef.get(), v);
                 popup.setOnMenuItemClickListener(item -> {
                     switch (item.getItemId()) {
                         case R.id.action_uninstall:
                             Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE);
-                            uninstallIntent.setData(Uri.parse("package:" + appInfo.packageName));
-                            getContext().startActivity(uninstallIntent);
+                            uninstallIntent.setData(Uri.parse("package:" + appData.applicationInfo.packageName));
+                            contextRef.get().startActivity(uninstallIntent);
                             return true;
                         case R.id.action_info:
                             Intent infoIntent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                            infoIntent.setData(Uri.parse("package:" + appInfo.packageName));
-                            getContext().startActivity(infoIntent);
+                            infoIntent.setData(Uri.parse("package:" + appData.applicationInfo.packageName));
+                            contextRef.get().startActivity(infoIntent);
                             return true;
                         default:
                             return false;
@@ -124,12 +130,29 @@ public class AppsListAdapter extends ArrayAdapter<ApplicationInfo> {
                 return true;
             });
         }
+    }
 
+    @androidx.annotation.NonNull
+    private View initUi(int position, View view, boolean isConvertView) {
+        TextView appTitle = view.findViewById(R.id.appTitle);
+        ImageView appImage = view.findViewById(R.id.appIcon);
+        ApplicationInfo appInfo = AppsListAdapter.this.getItem(position);
+
+        if (appInfo == null) {
+            return view;
+        }
+
+        if (isConvertView && appTitle.getText().equals(packageManager.getApplicationLabel(appInfo))) {
+            return view;
+        }
+        
+        appTitle.setTextColor(appTitleColor);
+        new AppDataTask(getContext(), view, appTitle, appImage).execute(appInfo);
         return view;
     }
 
     @Nullable
-    private Intent tryToFindDefaultIntent(ApplicationInfo appInfo, Intent defaultLaunchIntent) {
+    private static Intent tryToFindDefaultIntent(ApplicationInfo appInfo, Intent defaultLaunchIntent, PackageManager packageManager) {
         Intent targetIntent = null;
         if (defaultLaunchIntent != null) {
             targetIntent = defaultLaunchIntent;
@@ -158,4 +181,33 @@ public class AppsListAdapter extends ArrayAdapter<ApplicationInfo> {
         return targetIntent;
     }
 
+    private static class AppData {
+        private final Drawable drawable;
+        private final String label;
+        private final Intent intent;
+        private final ApplicationInfo applicationInfo;
+
+        private AppData(Drawable drawable, String label, Intent intent, ApplicationInfo applicationInfo) {
+            this.drawable = drawable;
+            this.label = label;
+            this.intent = intent;
+            this.applicationInfo = applicationInfo;
+        }
+
+        public Drawable getDrawable() {
+            return drawable;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public Intent getIntent() {
+            return intent;
+        }
+
+        public ApplicationInfo getApplicationInfo() {
+            return applicationInfo;
+        }
+    }
 }
