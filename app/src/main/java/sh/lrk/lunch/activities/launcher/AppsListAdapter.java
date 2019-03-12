@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -53,6 +54,8 @@ public class AppsListAdapter extends ArrayAdapter<ApplicationInfo> {
         packageManager = a.getPackageManager();
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext().getApplicationContext());
         appTitleColor = defaultSharedPreferences.getInt(KEY_LAUNCHER_TEXT_COLOR, DEFAULT_TEXT_COLOR);
+        sort((o1, o2) -> o1.loadLabel(packageManager).toString()
+                .compareToIgnoreCase(o2.loadLabel(packageManager).toString()));
     }
 
     @androidx.annotation.NonNull
@@ -75,7 +78,7 @@ public class AppsListAdapter extends ArrayAdapter<ApplicationInfo> {
         private final AtomicReference<TextView> appTitleRef;
         private final AtomicReference<ImageView> appImageRef;
 
-        public AppDataTask(Context context, View parent, TextView appTitle, ImageView appImage) {
+        AppDataTask(Context context, View parent, TextView appTitle, ImageView appImage) {
             this.packageName = context.getPackageName();
             this.packageManager = context.getPackageManager();
             this.contextRef = new AtomicReference<>(context);
@@ -134,6 +137,7 @@ public class AppsListAdapter extends ArrayAdapter<ApplicationInfo> {
 
     @androidx.annotation.NonNull
     private View initUi(int position, View view, boolean isConvertView) {
+
         TextView appTitle = view.findViewById(R.id.appTitle);
         ImageView appImage = view.findViewById(R.id.appIcon);
         ApplicationInfo appInfo = AppsListAdapter.this.getItem(position);
@@ -145,7 +149,7 @@ public class AppsListAdapter extends ArrayAdapter<ApplicationInfo> {
         if (isConvertView && appTitle.getText().equals(packageManager.getApplicationLabel(appInfo))) {
             return view;
         }
-        
+
         appTitle.setTextColor(appTitleColor);
         new AppDataTask(getContext(), view, appTitle, appImage).execute(appInfo);
         return view;

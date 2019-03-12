@@ -29,8 +29,6 @@ public class MainActivity extends GestureRespondingAppCompatActivity {
     private static final String TAG = MainActivity.class.getCanonicalName();
 
     public static final int REQUEST_CODE_LAUNCHER = 1; // apparently this can be any int > 0 (?)
-    public static final int REQUEST_CODE_BACKGROUND = 2; // apparently this can be any int > 0 (?)
-    public static final String UNSET = "UNSET";
     private ImageButton imageButton;
     private RelativeLayout mainView;
     private SharedPreferences defaultSharedPreferences;
