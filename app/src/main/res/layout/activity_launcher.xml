@@ -7,6 +7,15 @@
     tools:context=".activities.launcher.LauncherActivity"
     android:id="@+id/launcher_view">
 
+    <ImageView
+        android:id="@+id/swipeDownHint"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_expand_more_white_24dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/swipe_down_hint" />
+
     <GridView
         android:id="@+id/appsList"
         android:layout_width="match_parent"
@@ -16,6 +25,6 @@
         android:numColumns="auto_fit"
         android:verticalSpacing="32dp"
         android:stretchMode="spacingWidth"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="40dp"
         android:padding="@dimen/defaultMargin"/>
 </RelativeLayout>

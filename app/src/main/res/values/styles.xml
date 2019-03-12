@@ -11,7 +11,6 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:statusBarColor">@color/transparent</item>
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="popupMenuStyle">@style/popupMenuStyle</item>
         <item name="android:navigationBarColor">@color/transparent</item>
     </style>
 
@@ -31,5 +30,6 @@
     <style name="AppTheme.HomeScreen" parent="AppTheme">
         <item name="android:windowBackground">@color/transparent</item>
         <item name="android:windowShowWallpaper">true</item>
+        <item name="popupMenuStyle">@style/popupMenuStyle</item>
     </style>
 </resources>

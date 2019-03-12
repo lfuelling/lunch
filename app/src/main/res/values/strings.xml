@@ -91,6 +91,7 @@
     <string name="pref_description_swipe_instead_of_press">If true, the app view will show on swipe up inside the home screen instead of pressing the button.</string>
     <string name="uninstall">Uninstall</string>
     <string name="show_app_info">App info</string>
+    <string name="swipe_down_hint">Swipe Down Hint</string>
 
     <string-array name="pref_app_icon_type_titles">
         <item>Widgets</item>

@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import sh.lrk.lunch.activities.GestureRespondingAppCompatActivity;
 import sh.lrk.lunch.activities.main.SwipeGestureDetector;
 
 import static sh.lrk.lunch.activities.settings.SettingsActivity.DEFAULT_LAUNCHER_BACKGROUND;
+import static sh.lrk.lunch.activities.settings.SettingsActivity.KEY_BLACK_APPS_BTN;
 import static sh.lrk.lunch.activities.settings.SettingsActivity.KEY_LAUNCHER_BACKGROUND;
 import static sh.lrk.lunch.activities.settings.SettingsActivity.KEY_SHOW_ALL_APPS;
 
@@ -44,6 +46,15 @@ public class LauncherActivity extends GestureRespondingAppCompatActivity {
 
         SwipeGestureDetector gestureDetector = new SwipeGestureDetector(this);
         gestureDetectorCompat = new GestureDetectorCompat(this, gestureDetector);
+
+        ImageView swipeDownHint = findViewById(R.id.swipeDownHint);
+        boolean useBlackAppsBtn = defaultSharedPreferences.getBoolean(KEY_BLACK_APPS_BTN, false);
+
+        if(useBlackAppsBtn) {
+            swipeDownHint.setImageDrawable(getDrawable(R.drawable.ic_expand_more_black_24dp));
+        } else {
+            swipeDownHint.setImageDrawable(getDrawable(R.drawable.ic_expand_more_white_24dp));
+        }
 
         GridView grid = findViewById(R.id.appsList);
         grid.setAdapter(new AppsListAdapter(LauncherActivity.this, getLaunchableApplications()));

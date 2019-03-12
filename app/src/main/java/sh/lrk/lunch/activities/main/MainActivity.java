@@ -52,10 +52,6 @@ public class MainActivity extends GestureRespondingAppCompatActivity {
         imageButton = findViewById(R.id.launcherButton);
         mainView = findViewById(R.id.main_view);
 
-        if (!useSwipeInsteadOfPress) {
-            imageButton.setOnClickListener(v -> showAppMenu());
-        }
-
         setAppIconDrawable();
 
         SwipeGestureDetector gestureDetector = new SwipeGestureDetector(this);
@@ -84,6 +80,9 @@ public class MainActivity extends GestureRespondingAppCompatActivity {
     }
 
     private void setAppIconDrawable() {
+        if (!useSwipeInsteadOfPress) {
+            imageButton.setOnClickListener(v -> showAppMenu());
+        }
         int appIconType = Integer.parseInt((chosenAppIconValue == null) ? DEFAULT_APP_ICON_TYPE : chosenAppIconValue);
         switch (appIconType) {
             case 2:
