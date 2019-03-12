@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.MainActivity">
+    tools:context=".activities.MainActivity"
+    android:background="@mipmap/default_bg">
 
-    <GridView
-        android:id="@+id/appsList"
+    <ImageButton
+        android:id="@+id/launcherButton"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:columnWidth="90dp"
-        android:numColumns="auto_fit"
-        android:verticalSpacing="32dp"
-        android:stretchMode="spacingWidth" />
+        android:layout_height="96dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_expand_less_white_24dp"
+        android:background="@color/transparent"
+        android:contentDescription="@string/tap_to_show_all_apps" />
 </RelativeLayout>

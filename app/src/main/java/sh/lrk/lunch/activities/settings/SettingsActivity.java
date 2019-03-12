@@ -1,122 +1,34 @@
 package sh.lrk.lunch.activities.settings;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
-import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
+
+import com.github.danielnilsson9.colorpickerview.dialog.ColorPickerDialogFragment;
+import com.github.danielnilsson9.colorpickerview.preference.ColorPreference;
 
 import java.util.List;
 
+import androidx.appcompat.app.ActionBar;
 import sh.lrk.lunch.R;
 
-/**
- * A {@link PreferenceActivity} that presents a set of application settings. On
- * handset devices, settings are presented as a single list. On tablets,
- * settings are split by category, with category headers shown to the left of
- * the list of settings.
- * <p>
- * See <a href="http://developer.android.com/design/patterns/settings.html">
- * Android Design: Settings</a> for design guidelines and the <a
- * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
- * API Guide</a> for more information on developing a Settings UI.
- */
-public class SettingsActivity extends AppCompatPreferenceActivity {
 
-    /**
-     * A preference value change listener that updates the preference's summary
-     * to reflect its new value.
-     */
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object value) {
-            String stringValue = value.toString();
+public class SettingsActivity extends AppCompatPreferenceActivity implements ColorPickerDialogFragment.ColorPickerDialogListener {
 
-            if (preference instanceof ListPreference) {
-                // For list preferences, look up the correct display value in
-                // the preference's 'entries' list.
-                ListPreference listPreference = (ListPreference) preference;
-                int index = listPreference.findIndexOfValue(stringValue);
+    public static final String TAG = SettingsActivity.class.getCanonicalName();
 
-                // Set the summary to reflect the new value.
-                preference.setSummary(
-                        index >= 0
-                                ? listPreference.getEntries()[index]
-                                : null);
+    public static final String KEY_LAUNCHER_BACKGROUND = "launcher_background";
+    public static final String KEY_LAUNCHER_TEXT_COLOR = "launcher_text_color";
 
-            } else if (preference instanceof RingtonePreference) {
-                // For ringtone preferences, look up the correct display value
-                // using RingtoneManager.
-                if (TextUtils.isEmpty(stringValue)) {
-                    // Empty values correspond to 'silent' (no ringtone).
-                    preference.setSummary(R.string.pref_ringtone_silent);
-
-                } else {
-                    Ringtone ringtone = RingtoneManager.getRingtone(
-                            preference.getContext(), Uri.parse(stringValue));
-
-                    if (ringtone == null) {
-                        // Clear the summary if there was a lookup error.
-                        preference.setSummary(null);
-                    } else {
-                        // Set the summary to reflect the new ringtone display
-                        // name.
-                        String name = ringtone.getTitle(preference.getContext());
-                        preference.setSummary(name);
-                    }
-                }
-
-            } else {
-                // For all other preferences, set the summary to the value's
-                // simple string representation.
-                preference.setSummary(stringValue);
-            }
-            return true;
-        }
-    };
-
-    /**
-     * Helper method to determine if the device has an extra-large screen. For
-     * example, 10" tablets are extra-large.
-     */
-    private static boolean isXLargeTablet(Context context) {
-        return (context.getResources().getConfiguration().screenLayout
-                & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
-    }
-
-    /**
-     * Binds a preference's summary to its value. More specifically, when the
-     * preference's value is changed, its summary (line of text below the
-     * preference title) is updated to reflect the value. The summary is also
-     * immediately updated upon calling this method. The exact display format is
-     * dependent on the type of preference.
-     *
-     * @see #sBindPreferenceSummaryToValueListener
-     */
-    private static void bindPreferenceSummaryToValue(Preference preference) {
-        // Set the listener to watch for value changes.
-        preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
-
-        // Trigger the listener immediately with the preference's
-        // current value.
-        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                PreferenceManager
-                        .getDefaultSharedPreferences(preference.getContext())
-                        .getString(preference.getKey(), ""));
-    }
+    private static ColorPreference backgroundColorPreference;
+    private static ColorPreference textColorPreference;
+    private static int backgroundColorPickerId;
+    private static int textColorPickerId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,13 +36,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         setupActionBar();
     }
 
-    /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
     private void setupActionBar() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            // Show the Up button in the action bar.
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
@@ -140,7 +48,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     @Override
     public boolean onIsMultiPane() {
-        return isXLargeTablet(this);
+        return (getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
     }
 
     /**
@@ -156,11 +65,34 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * This method stops fragment injection in malicious applications.
      * Make sure to deny any unknown fragments here.
      */
+    @Override
     protected boolean isValidFragment(String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName)
                 || GeneralPreferenceFragment.class.getName().equals(fragmentName)
-                || DataSyncPreferenceFragment.class.getName().equals(fragmentName)
-                || NotificationPreferenceFragment.class.getName().equals(fragmentName);
+                || AdvancedPreferenceFragment.class.getName().equals(fragmentName)
+                || CustomizationPreferenceFragment.class.getName().equals(fragmentName);
+    }
+
+    @Override
+    public void onColorSelected(int dialogId, int color) {
+        if (dialogId == backgroundColorPickerId) {
+            backgroundColorPreference.saveValue(color);
+        } else if (dialogId == textColorPickerId) {
+            textColorPreference.saveValue(color);
+        } else {
+            Log.w(TAG, "Unknown dialogId!");
+        }
+    }
+
+    @Override
+    public void onDialogDismissed(int dialogId) {
+        if (dialogId == backgroundColorPickerId) {
+            //backgroundColorPicker.dismiss();
+        } else if (dialogId == textColorPickerId) {
+            //textColorPicker.dismiss();
+        } else {
+            Log.w(TAG, "Unknown dialogId!");
+        }
     }
 
     /**
@@ -175,12 +107,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_general);
             setHasOptionsMenu(true);
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("example_text"));
-            bindPreferenceSummaryToValue(findPreference("example_list"));
         }
 
         @Override
@@ -199,18 +125,40 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * activity is showing a two-pane settings UI.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class NotificationPreferenceFragment extends PreferenceFragment {
+    public static class CustomizationPreferenceFragment extends PreferenceFragment {
+
+        private ColorPickerDialogFragment backgroundColorPicker;
+        private ColorPickerDialogFragment textColorPicker;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_notification);
+            addPreferencesFromResource(R.xml.pref_customization);
             setHasOptionsMenu(true);
+            buildTextColorPreference();
+            buildBackgroundColorPreference();
+        }
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
+        private void buildBackgroundColorPreference() {
+            backgroundColorPreference = (ColorPreference) findPreference(KEY_LAUNCHER_BACKGROUND);
+            backgroundColorPicker = new ColorPickerDialogFragment();
+            Bundle args = new Bundle();
+            args.putInt("id", 2);
+            backgroundColorPicker.setArguments(args);
+            backgroundColorPickerId = backgroundColorPicker.getId();
+            backgroundColorPreference.setOnShowDialogListener((title, color) ->
+                    backgroundColorPicker.show(getFragmentManager(), title));
+        }
+
+        private void buildTextColorPreference() {
+            textColorPreference = (ColorPreference) findPreference(KEY_LAUNCHER_TEXT_COLOR);
+            textColorPicker = new ColorPickerDialogFragment();
+            Bundle args = new Bundle();
+            args.putInt("id", 1);
+            textColorPicker.setArguments(args);
+            textColorPickerId = textColorPicker.getId();
+            textColorPreference.setOnShowDialogListener((title, color) ->
+                    textColorPicker.show(getFragmentManager(), title));
         }
 
         @Override
@@ -229,18 +177,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * activity is showing a two-pane settings UI.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class DataSyncPreferenceFragment extends PreferenceFragment {
+    public static class AdvancedPreferenceFragment extends PreferenceFragment {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_data_sync);
+            addPreferencesFromResource(R.xml.pref_advanced);
             setHasOptionsMenu(true);
-
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("sync_frequency"));
         }
 
         @Override

@@ -1,0 +1,17 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.github.danielnilsson9.colorpickerview.preference.ColorPreference
+        android:title="@string/pref_title_launcher_background"
+        android:defaultValue="0x00000022"
+        android:key="launcher_background"
+        android:id="@+id/backgroundColorPreference"
+        android:summary="@string/pref_description_launcher_background" />
+
+    <com.github.danielnilsson9.colorpickerview.preference.ColorPreference
+        android:title="@string/pref_title_launcher_text_color"
+        android:defaultValue="0xFFFFFF"
+        android:key="launcher_text_color"
+        android:id="@+id/textColorPreference"
+        android:summary="@string/pref_description_launcher_text_color" />
+
+</PreferenceScreen>
