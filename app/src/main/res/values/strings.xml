@@ -84,4 +84,7 @@
     <string name="pref_description_launcher_background">Background color of the \"all apps\" view.</string>
     <string name="pref_title_launcher_text_color">Launcher Text Color</string>
     <string name="pref_description_launcher_text_color">Text color of the application names.</string>
+    <string name="settings">Settings</string>
+    <string name="change_background">Change Background</string>
+    <string name="okay">Okay</string>
 </resources>

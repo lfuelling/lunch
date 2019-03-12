@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +17,9 @@ import java.util.List;
 
 import sh.lrk.lunch.R;
 import sh.lrk.lunch.activities.settings.SettingsActivity;
+
+import static sh.lrk.lunch.activities.settings.SettingsActivity.DEFAULT_TEXT_COLOR;
+import static sh.lrk.lunch.activities.settings.SettingsActivity.KEY_LAUNCHER_TEXT_COLOR;
 
 public class AppsListAdapter extends ArrayAdapter<ApplicationInfo> {
 
@@ -55,7 +57,7 @@ public class AppsListAdapter extends ArrayAdapter<ApplicationInfo> {
             return view;
         }
 
-        int color = defaultSharedPreferences.getInt("launcher_text_color", 0xFFFFFF);
+        int color = defaultSharedPreferences.getInt(KEY_LAUNCHER_TEXT_COLOR, DEFAULT_TEXT_COLOR);
         appTitle.setTextColor(color);
 
         if (getContext().getPackageName().equals(appInfo.packageName)) {
@@ -69,7 +71,7 @@ public class AppsListAdapter extends ArrayAdapter<ApplicationInfo> {
             view.setOnClickListener(v -> getContext().startActivity(packageManager.getLaunchIntentForPackage(appInfo.packageName)));
         }
 
-        return view; // TODO implement: init view
+        return view;
     }
 
 }

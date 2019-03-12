@@ -3,7 +3,6 @@ package sh.lrk.lunch.activities.launcher;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -14,6 +13,9 @@ import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import sh.lrk.lunch.R;
+
+import static sh.lrk.lunch.activities.settings.SettingsActivity.DEFAULT_LAUNCHER_BACKGROUND;
+import static sh.lrk.lunch.activities.settings.SettingsActivity.KEY_LAUNCHER_BACKGROUND;
 
 public class LauncherActivity extends AppCompatActivity {
 
@@ -26,7 +28,7 @@ public class LauncherActivity extends AppCompatActivity {
 
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-        int color = defaultSharedPreferences.getInt("launcher_background", 0x00000022);
+        int color = defaultSharedPreferences.getInt(KEY_LAUNCHER_BACKGROUND, DEFAULT_LAUNCHER_BACKGROUND);
         getWindow().setBackgroundDrawable(new ColorDrawable(color));
 
         GridView grid = findViewById(R.id.appsList);

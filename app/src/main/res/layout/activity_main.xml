@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity"
-    android:background="@mipmap/default_bg">
+    android:background="@mipmap/default_bg"
+    android:id="@+id/main_view">
 
     <ImageButton
         android:id="@+id/launcherButton"

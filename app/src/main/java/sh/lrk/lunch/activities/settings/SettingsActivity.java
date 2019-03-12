@@ -2,10 +2,12 @@ package sh.lrk.lunch.activities.settings;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -24,6 +26,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Col
 
     public static final String KEY_LAUNCHER_BACKGROUND = "launcher_background";
     public static final String KEY_LAUNCHER_TEXT_COLOR = "launcher_text_color";
+    public static final String KEY_BACKGROUND_URI = "background_uri";
+
+    public static final int DEFAULT_LAUNCHER_BACKGROUND = 0x00000022;
+    public static final int DEFAULT_TEXT_COLOR = 0xFFFFFFFF;
 
     private static ColorPreference backgroundColorPreference;
     private static ColorPreference textColorPreference;
@@ -129,22 +135,28 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Col
 
         private ColorPickerDialogFragment backgroundColorPicker;
         private ColorPickerDialogFragment textColorPicker;
+        private SharedPreferences sharedPreferences;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_customization);
             setHasOptionsMenu(true);
+
+            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext().getApplicationContext());
+
             buildTextColorPreference();
             buildBackgroundColorPreference();
         }
 
         private void buildBackgroundColorPreference() {
             backgroundColorPreference = (ColorPreference) findPreference(KEY_LAUNCHER_BACKGROUND);
-            backgroundColorPicker = new ColorPickerDialogFragment();
-            Bundle args = new Bundle();
-            args.putInt("id", 2);
-            backgroundColorPicker.setArguments(args);
+            int backgroundColor = sharedPreferences.getInt(KEY_LAUNCHER_BACKGROUND, DEFAULT_LAUNCHER_BACKGROUND);
+            backgroundColorPicker = ColorPickerDialogFragment.newInstance(2,
+                    backgroundColorPreference.getKey(),
+                    getString(R.string.okay),
+                    backgroundColor,
+                    true);
             backgroundColorPickerId = backgroundColorPicker.getId();
             backgroundColorPreference.setOnShowDialogListener((title, color) ->
                     backgroundColorPicker.show(getFragmentManager(), title));
@@ -152,10 +164,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Col
 
         private void buildTextColorPreference() {
             textColorPreference = (ColorPreference) findPreference(KEY_LAUNCHER_TEXT_COLOR);
-            textColorPicker = new ColorPickerDialogFragment();
-            Bundle args = new Bundle();
-            args.putInt("id", 1);
-            textColorPicker.setArguments(args);
+            int textColor = sharedPreferences.getInt(KEY_LAUNCHER_TEXT_COLOR, DEFAULT_TEXT_COLOR);
+            textColorPicker = ColorPickerDialogFragment.newInstance(1,
+                    textColorPreference.getKey(),
+                    getString(R.string.okay),
+                    textColor,
+                    true);
             textColorPickerId = textColorPicker.getId();
             textColorPreference.setOnShowDialogListener((title, color) ->
                     textColorPicker.show(getFragmentManager(), title));

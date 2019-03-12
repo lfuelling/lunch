@@ -7,13 +7,14 @@
         <item name="android:windowContentOverlay">@null</item>
 
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item><!-- FIXME: change default colors -->
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:statusBarColor">@color/transparent</item>
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="popupMenuStyle">@style/popupMenuStyle</item>
     </style>
 
-    <style name="AppTheme.Transparent" parent="AppTheme">
+    <style name="AppTheme.Launcher" parent="AppTheme">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@color/darkTransparent</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -21,4 +22,8 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
+    <style name="popupMenuStyle" parent="@style/Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:dropDownHorizontalOffset">110dp</item>
+        <item name="android:dropDownVerticalOffset">140dp</item>
+    </style>
 </resources>

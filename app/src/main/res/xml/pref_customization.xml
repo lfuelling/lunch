@@ -9,7 +9,7 @@
 
     <com.github.danielnilsson9.colorpickerview.preference.ColorPreference
         android:title="@string/pref_title_launcher_text_color"
-        android:defaultValue="0xFFFFFF"
+        android:defaultValue="0xFFFFFFFF"
         android:key="launcher_text_color"
         android:id="@+id/textColorPreference"
         android:summary="@string/pref_description_launcher_text_color" />

@@ -11,6 +11,7 @@
         android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"
         android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
         android:protectionLevel="normal" /> <!-- Self explanatory -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" /> <!-- To call a phone number directly without displaying the dialer -->
     <uses-permission android:name="android.permission.CALL_PHONE" /> <!-- To read phone state -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- Display notification drawer -->
@@ -79,6 +80,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".activities.BackgroundChooserActivity"
+            android:label="@string/change_background"
+            android:theme="@style/Theme.AppCompat" />
+
         <meta-data
             android:name="android.max_aspect"
             android:value="3.0" />
@@ -92,7 +98,7 @@
             android:screenOrientation="user"
             android:stateNotNeeded="true"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
-            android:theme="@style/AppTheme.Transparent" >
+            android:theme="@style/AppTheme.Launcher" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
