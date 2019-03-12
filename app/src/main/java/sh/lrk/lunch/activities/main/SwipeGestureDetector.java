@@ -80,6 +80,6 @@ public class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListene
 
     @Override
     public void onLongPress(MotionEvent e) {
-        super.onLongPress(e);
+        this.activity.handleLongPress();
     }
 }

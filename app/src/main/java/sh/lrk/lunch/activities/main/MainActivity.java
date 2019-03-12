@@ -85,14 +85,14 @@ public class MainActivity extends GestureRespondingAppCompatActivity {
         }
         int appIconType = Integer.parseInt((chosenAppIconValue == null) ? DEFAULT_APP_ICON_TYPE : chosenAppIconValue);
         switch (appIconType) {
-            case 2:
+            case 0:
                 if (useBlackAppIcon) {
                     imageButton.setImageDrawable(getDrawable(R.drawable.ic_expand_less_black_24dp));
                 } else {
                     imageButton.setImageDrawable(getDrawable(R.drawable.ic_expand_less_white_24dp));
                 }
                 break;
-            case 1:
+            case 2:
                 if (useBlackAppIcon) {
                     imageButton.setImageDrawable(getDrawable(R.drawable.ic_widgets_black_48dp));
                 } else {
@@ -100,7 +100,7 @@ public class MainActivity extends GestureRespondingAppCompatActivity {
                 }
                 break;
             default:
-            case 0:
+            case 1:
                 if (useBlackAppIcon) {
                     imageButton.setImageDrawable(getDrawable(R.drawable.ic_apps_black_48dp));
                 } else {
