@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.launcher.LauncherActivity"
-    android:paddingTop="@*android:dimen/status_bar_height">
+    android:id="@+id/launcher_view">
 
     <GridView
         android:id="@+id/appsList"

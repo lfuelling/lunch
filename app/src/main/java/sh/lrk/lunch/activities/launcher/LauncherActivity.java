@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.GridView;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,9 @@ public class LauncherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
 
+        RelativeLayout launcherView = findViewById(R.id.launcher_view);
+        launcherView.setPadding(0, getStatusBarHeight(), 0, 0);
+
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         int color = defaultSharedPreferences.getInt(KEY_LAUNCHER_BACKGROUND, DEFAULT_LAUNCHER_BACKGROUND);
@@ -37,6 +41,15 @@ public class LauncherActivity extends AppCompatActivity {
 
         grid = findViewById(R.id.appsList);
         grid.setAdapter(new AppsListAdapter(LauncherActivity.this, getLaunchableApplications()));
+    }
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
     private List<ApplicationInfo> getLaunchableApplications() {
