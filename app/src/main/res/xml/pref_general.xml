@@ -2,9 +2,8 @@
 
     <SwitchPreference
         android:defaultValue="true"
-        android:key="example_switch"
-        android:summary="@string/pref_description_social_recommendations"
-        android:title="@string/pref_title_social_recommendations" />
-
+        android:key="swipe_instead_of_press"
+        android:summary="@string/pref_description_swipe_instead_of_press"
+        android:title="@string/pref_title_swipe_instead_of_press" />
 
 </PreferenceScreen>

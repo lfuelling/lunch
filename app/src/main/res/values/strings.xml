@@ -87,12 +87,18 @@
     <string name="cancel">Cancel</string>
     <string name="pref_title_app_icon_type">App icon type</string>
     <string name="pref_description_app_icon_type">Determines which icon is shown on the main view.</string>
+    <string name="pref_title_swipe_instead_of_press">Use swipe instead of press for launcher</string>
+    <string name="pref_description_swipe_instead_of_press">If true, the app view will show on swipe up inside the home screen instead of pressing the button.</string>
+    <string name="uninstall">Uninstall</string>
+    <string name="show_app_info">App info</string>
 
     <string-array name="pref_app_icon_type_titles">
         <item>Widgets</item>
         <item>Applications</item>
+        <item>Chevron Up</item>
     </string-array>
     <string-array name="pref_app_icon_type_values">
+        <item>2</item>
         <item>1</item>
         <item>0</item>
     </string-array>

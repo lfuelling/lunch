@@ -7,24 +7,27 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GestureDetectorCompat;
 import sh.lrk.lunch.R;
+import sh.lrk.lunch.activities.GestureRespondingAppCompatActivity;
+import sh.lrk.lunch.activities.main.SwipeGestureDetector;
 
 import static sh.lrk.lunch.activities.settings.SettingsActivity.DEFAULT_LAUNCHER_BACKGROUND;
 import static sh.lrk.lunch.activities.settings.SettingsActivity.KEY_LAUNCHER_BACKGROUND;
 import static sh.lrk.lunch.activities.settings.SettingsActivity.KEY_SHOW_ALL_APPS;
 
-public class LauncherActivity extends AppCompatActivity {
+public class LauncherActivity extends GestureRespondingAppCompatActivity {
 
     private static final String TAG = LauncherActivity.class.getCanonicalName();
     private SharedPreferences defaultSharedPreferences;
-    private GridView grid;
+    private GestureDetectorCompat gestureDetectorCompat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +42,20 @@ public class LauncherActivity extends AppCompatActivity {
         int color = defaultSharedPreferences.getInt(KEY_LAUNCHER_BACKGROUND, DEFAULT_LAUNCHER_BACKGROUND);
         getWindow().setBackgroundDrawable(new ColorDrawable(color));
 
-        grid = findViewById(R.id.appsList);
+        SwipeGestureDetector gestureDetector = new SwipeGestureDetector(this);
+        gestureDetectorCompat = new GestureDetectorCompat(this, gestureDetector);
+
+        GridView grid = findViewById(R.id.appsList);
         grid.setAdapter(new AppsListAdapter(LauncherActivity.this, getLaunchableApplications()));
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (gestureDetectorCompat != null) {
+            gestureDetectorCompat.onTouchEvent(event);
+            return true;
+        }
+        return false;
     }
 
     public int getStatusBarHeight() {
@@ -67,5 +82,20 @@ public class LauncherActivity extends AppCompatActivity {
         }
 
         return installedApplications;
+    }
+
+    @Override
+    public void handleDownSwipe() {
+        finish();
+    }
+
+    @Override
+    public void handleUpSwipe() {
+        Log.d(TAG, "Nothing to do on up swipe!");
+    }
+
+    @Override
+    public void handleLongPress() {
+        Log.d(TAG, "Nothing to do on long press!");
     }
 }
