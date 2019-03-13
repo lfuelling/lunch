@@ -3,17 +3,17 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
-        android:fragment="sh.lrk.lunch.activities.settings.SettingsActivity$GeneralPreferenceFragment"
+        android:fragment="sh.lrk.lunch.app.settings.SettingsActivity$GeneralPreferenceFragment"
         android:icon="@drawable/ic_info_white_24dp"
         android:title="@string/pref_header_general" />
 
     <header
-        android:fragment="sh.lrk.lunch.activities.settings.SettingsActivity$CustomizationPreferenceFragment"
+        android:fragment="sh.lrk.lunch.app.settings.SettingsActivity$CustomizationPreferenceFragment"
         android:icon="@drawable/ic_color_lens_white_24dp"
         android:title="@string/pref_header_customization" />
 
     <header
-        android:fragment="sh.lrk.lunch.activities.settings.SettingsActivity$AdvancedPreferenceFragment"
+        android:fragment="sh.lrk.lunch.app.settings.SettingsActivity$AdvancedPreferenceFragment"
         android:icon="@drawable/ic_bug_report_white_24dp"
         android:title="@string/pref_header_advanced" />
 

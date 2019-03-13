@@ -1,4 +1,4 @@
-package sh.lrk.lunch.activities.settings;
+package sh.lrk.lunch.app.settings;
 
 import android.annotation.TargetApi;
 import android.content.Intent;

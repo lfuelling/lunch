@@ -1,11 +1,10 @@
-package sh.lrk.lunch.activities.main;
+package sh.lrk.lunch.app.main;
 
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
-import sh.lrk.lunch.activities.GestureRespondingAppCompatActivity;
 
 /**
  * Created by Jerry on 4/18/2018.
@@ -24,9 +23,9 @@ public class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListene
     private static int MAX_SWIPE_DISTANCE_Y = 1000;
 
     // Source activity that display message in text view.
-    private final GestureRespondingAppCompatActivity activity;
+    private final GestureResponder activity;
 
-    public SwipeGestureDetector(@NonNull GestureRespondingAppCompatActivity activity) {
+    public SwipeGestureDetector(@NonNull GestureResponder activity) {
         this.activity = activity;
     }
 

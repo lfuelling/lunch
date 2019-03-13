@@ -1,4 +1,4 @@
-package sh.lrk.lunch.activities.settings;
+package sh.lrk.lunch.app.settings;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

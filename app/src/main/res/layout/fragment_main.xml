@@ -6,11 +6,14 @@
     tools:context=".app.main.MainActivity"
     android:background="@color/transparent"
     android:backgroundTint="@color/transparent"
-    android:id="@+id/main_container">
-
-    <FrameLayout
-        android:id="@+id/frame_container"
+    android:id="@+id/main_view">
+    <ImageButton
+        android:id="@+id/launcherButton"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
+        android:layout_height="96dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_apps_white_48dp"
+        android:background="@color/transparent"
+        android:contentDescription="@string/tap_to_show_all_apps" />
 </RelativeLayout>
