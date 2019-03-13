@@ -52,9 +52,9 @@ public class LauncherActivity extends GestureRespondingAppCompatActivity {
         boolean useBlackAppsBtn = defaultSharedPreferences.getBoolean(KEY_BLACK_APPS_BTN, false);
 
         if(useBlackAppsBtn) {
-            swipeDownHint.setImageDrawable(getDrawable(R.drawable.ic_expand_more_black_24dp));
+            swipeDownHint.setImageDrawable(getDrawable(R.drawable.ic_expand_more_black_48dp));
         } else {
-            swipeDownHint.setImageDrawable(getDrawable(R.drawable.ic_expand_more_white_24dp));
+            swipeDownHint.setImageDrawable(getDrawable(R.drawable.ic_expand_more_white_48dp));
         }
 
         GridView grid = findViewById(R.id.appsList);
