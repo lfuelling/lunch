@@ -35,11 +35,11 @@ import static sh.lrk.lunch.app.settings.SettingsActivity.KEY_SHOW_ALL_APPS;
 public class LauncherFragment extends Fragment {
 
     private static final String TAG = LauncherFragment.class.getCanonicalName();
-    private static final String KEY_APP_VECTOR = "app_vector";
+    public static final String KEY_APP_VECTOR = "app_vector";
 
     private SharedPreferences defaultSharedPreferences;
     private RelativeLayout launcherView;
-    private final Vector<AppData> appDataVector = new Vector<>();
+
     private AppsListAdapter adapter;
 
     @Override
@@ -68,8 +68,6 @@ public class LauncherFragment extends Fragment {
         adapter.addAll(appVector);
         adapter.sort((o1, o2) -> o1.getLabel().compareToIgnoreCase(o2.getLabel()));
         grid.setAdapter(adapter);
-        boolean showAllApps = defaultSharedPreferences.getBoolean(KEY_SHOW_ALL_APPS, false);
-        new AppFetcherTask(getContext(), appDataVector, showAllApps, adapter).execute();
     }
 
     @Nullable

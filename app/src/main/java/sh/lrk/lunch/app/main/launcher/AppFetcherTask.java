@@ -13,20 +13,18 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class AppFetcherTask extends AsyncTask<Void, Void, List<AppData>> {
 
-    private static final String TAG = AppFetcherTask.class.getCanonicalName();
-
     private final PackageManager packageManager;
     private final Vector<AppData> appDataVector;
     private final boolean showAllApps;
     private final AtomicReference<Context> contextRef;
-    private final AtomicReference<AppsListAdapter> appsListAdapterRef;
+    private final Callback callback;
 
-    AppFetcherTask(Context context, Vector<AppData> appDataVector, boolean showAllApps, AppsListAdapter appsListAdapter) {
+    public AppFetcherTask(Context context, Vector<AppData> appDataVector, boolean showAllApps, Callback callback) {
         this.packageManager = context.getPackageManager();
         this.appDataVector = appDataVector;
         this.showAllApps = showAllApps;
         this.contextRef = new AtomicReference<>(context);
-        this.appsListAdapterRef = new AtomicReference<>(appsListAdapter);
+        this.callback = callback;
     }
 
     @Override
@@ -47,5 +45,14 @@ public class AppFetcherTask extends AsyncTask<Void, Void, List<AppData>> {
         do { /* Wait for other tasks */ } while ((appDataVector.size() + 1) < tasksStarted);
         ArrayList<AppData> list = new ArrayList<>(appDataVector);
         return Collections.unmodifiableList(list);
+    }
+
+    @Override
+    protected void onPostExecute(List<AppData> appData) {
+        callback.call(appData);
+    }
+
+    public interface Callback {
+        void call(List<AppData> appData);
     }
 }
