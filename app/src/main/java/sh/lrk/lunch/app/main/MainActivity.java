@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
@@ -19,6 +20,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.view.GestureDetectorCompat;
@@ -100,6 +102,21 @@ public class MainActivity extends AppCompatActivity implements GestureResponder 
     }
 
     @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.clear();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            replaceFragment(homeScreenFragment);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
     public void handleLongPress() {
         RelativeLayout mainView = homeScreenFragment.getMainView();
         if (mainView != null) {
@@ -124,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements GestureResponder 
     }
 
     public void showAppDrawer() {
-        if(homeScreenFragment != null) {
+        if (homeScreenFragment != null) {
             replaceFragment(launcherFragment);
         } else {
             Log.d(TAG, "Launcher not fully initialized!");
