@@ -8,51 +8,46 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.view.MenuInflater;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.Vector;
 import java.util.concurrent.atomic.AtomicReference;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.PopupMenu;
 import sh.lrk.lunch.R;
 import sh.lrk.lunch.app.settings.SettingsActivity;
 
-public class AppDataTask extends AsyncTask<ApplicationInfo, Void, AppData> {
-    private static final String TAG = AppDataTask.class.getCanonicalName();
+public class AppDataThread extends Thread {
+    private static final String TAG = AppDataThread.class.getCanonicalName();
 
     private final PackageManager packageManager;
     private final String packageName;
     private final Drawable settingsDrawable;
     private final String settingsTitle;
+    private final ApplicationInfo appInfo;
+    private final Vector<AppData> target;
     private final AtomicReference<Context> contextRef;
 
-    AppDataTask(Context context) {
+    AppDataThread(Context context, ApplicationInfo appInfo, Vector<AppData> target) {
         this.packageName = context.getPackageName();
         this.packageManager = context.getPackageManager();
         this.contextRef = new AtomicReference<>(context);
 
         this.settingsDrawable = context.getDrawable(R.drawable.ic_settings_deep_purple_a700_24dp);
         this.settingsTitle = context.getString(R.string.title_activity_settings);
+        this.appInfo = appInfo;
+        this.target = target;
     }
 
     @Override
-    protected AppData doInBackground(ApplicationInfo... applicationInfos) {
-        ApplicationInfo appInfo = applicationInfos[0];
+    public void run() {
         if (packageName.equals(appInfo.packageName)) {
             // launch settings instead of launcher
-            return new AppData(settingsDrawable, settingsTitle, new Intent(contextRef.get().getApplicationContext(), SettingsActivity.class), appInfo);
+            target.add(new AppData(settingsDrawable, settingsTitle, new Intent(contextRef.get().getApplicationContext(), SettingsActivity.class), appInfo));
         } else {
             Intent defaultLaunchIntent = packageManager.getLaunchIntentForPackage(appInfo.packageName);
             Intent fTargetIntent = tryToFindDefaultIntent(appInfo, defaultLaunchIntent, packageManager);
-            return new AppData(packageManager.getApplicationIcon(appInfo), packageManager.getApplicationLabel(appInfo).toString(), fTargetIntent, appInfo);
+            target.add(new AppData(packageManager.getApplicationIcon(appInfo), packageManager.getApplicationLabel(appInfo).toString(), fTargetIntent, appInfo));
         }
     }
 

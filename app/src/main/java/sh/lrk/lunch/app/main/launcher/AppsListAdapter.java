@@ -1,18 +1,10 @@
 package sh.lrk.lunch.app.main.launcher;
 
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -21,13 +13,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.ArrayList;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import sh.lrk.lunch.R;
-import sh.lrk.lunch.app.settings.SettingsActivity;
 
 import static sh.lrk.lunch.app.settings.SettingsActivity.DEFAULT_TEXT_COLOR;
 import static sh.lrk.lunch.app.settings.SettingsActivity.KEY_LAUNCHER_TEXT_COLOR;
@@ -37,17 +27,13 @@ public class AppsListAdapter extends ArrayAdapter<AppData> {
     private static final String TAG = AppsListAdapter.class.getCanonicalName();
 
     private final LayoutInflater inflater;
-    private final PackageManager packageManager;
     private final int appTitleColor;
 
-    AppsListAdapter(Activity a, List<AppData> installedApplications) {
-        super(a, R.layout.layout_app_entry);
-        addAll(installedApplications);
+    AppsListAdapter(Activity a) {
+        super(a, R.layout.layout_app_entry, new ArrayList<>());
         inflater = a.getLayoutInflater();
-        packageManager = a.getPackageManager();
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext().getApplicationContext());
         appTitleColor = defaultSharedPreferences.getInt(KEY_LAUNCHER_TEXT_COLOR, DEFAULT_TEXT_COLOR);
-        sort((o1, o2) -> o1.getLabel().compareToIgnoreCase(o2.getLabel()));
     }
 
     @androidx.annotation.NonNull
@@ -59,7 +45,6 @@ public class AppsListAdapter extends ArrayAdapter<AppData> {
             return initUi(position, inflater.inflate(R.layout.layout_app_entry, parent, false), false);
         }
     }
-
 
 
     @androidx.annotation.NonNull
@@ -108,8 +93,6 @@ public class AppsListAdapter extends ArrayAdapter<AppData> {
 
         return view;
     }
-
-
 
 
 }

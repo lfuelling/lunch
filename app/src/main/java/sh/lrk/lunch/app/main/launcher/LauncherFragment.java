@@ -18,11 +18,13 @@ import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import sh.lrk.lunch.R;
+import sh.lrk.lunch.app.main.MainActivity;
 
 import static sh.lrk.lunch.app.settings.SettingsActivity.DEFAULT_LAUNCHER_BACKGROUND;
 import static sh.lrk.lunch.app.settings.SettingsActivity.KEY_BLACK_APPS_BTN;
@@ -32,8 +34,11 @@ import static sh.lrk.lunch.app.settings.SettingsActivity.KEY_SHOW_ALL_APPS;
 public class LauncherFragment extends Fragment {
 
     private static final String TAG = LauncherFragment.class.getCanonicalName();
+
     private SharedPreferences defaultSharedPreferences;
     private RelativeLayout launcherView;
+    private final Vector<AppData> appDataVector = new Vector<>();
+    private AppsListAdapter adapter;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -56,7 +61,10 @@ public class LauncherFragment extends Fragment {
         }
 
         GridView grid = launcherView.findViewById(R.id.appsList);
-        grid.setAdapter(new AppsListAdapter(getActivity(), getLaunchableApplications()));
+        adapter = new AppsListAdapter(getActivity());
+        grid.setAdapter(adapter);
+        boolean showAllApps = defaultSharedPreferences.getBoolean(KEY_SHOW_ALL_APPS, false);
+        new AppFetcherTask(getContext(), appDataVector, showAllApps, adapter).execute();
     }
 
     @Nullable
@@ -73,27 +81,5 @@ public class LauncherFragment extends Fragment {
             result = getResources().getDimensionPixelSize(resourceId);
         }
         return result;
-    }
-
-    private List<AppData> getLaunchableApplications() {
-        List<AppData> installedApplications = new ArrayList<>();
-
-        PackageManager packageManager = getActivity().getPackageManager();
-        for (ApplicationInfo a : packageManager.getInstalledApplications(PackageManager.GET_META_DATA)) {
-            try {
-                boolean showAllApps = defaultSharedPreferences.getBoolean(KEY_SHOW_ALL_APPS, false);
-                if (packageManager.getLaunchIntentForPackage(a.packageName) != null) {
-                    installedApplications.add(new AppDataTask(getContext()).get());
-                } else if (showAllApps) {
-                    installedApplications.add(new AppDataTask(getContext()).get());
-                } else {
-                    Log.d(TAG, "Skipping addition of: '" + a.packageName + "'");
-                }
-            } catch (InterruptedException | ExecutionException e) {
-                Log.e(TAG, "Unable to fetch app data!", e);
-            }
-        }
-
-        return installedApplications;
     }
 }

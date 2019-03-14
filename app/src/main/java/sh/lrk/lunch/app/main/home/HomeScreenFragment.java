@@ -1,4 +1,4 @@
-package sh.lrk.lunch.app.main;
+package sh.lrk.lunch.app.main.home;
 
 import android.app.Fragment;
 import android.content.SharedPreferences;
@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import sh.lrk.lunch.R;
+import sh.lrk.lunch.app.main.MainActivity;
 
 import static sh.lrk.lunch.app.settings.SettingsActivity.DEFAULT_APP_ICON_TYPE;
 import static sh.lrk.lunch.app.settings.SettingsActivity.KEY_APP_ICON_TYPE;
@@ -72,9 +73,9 @@ public class HomeScreenFragment extends Fragment {
         switch (appIconType) {
             case 0:
                 if (useBlackAppIcon) {
-                    imageButton.setImageDrawable(getActivity().getDrawable(R.drawable.ic_expand_less_black_24dp));
+                    imageButton.setImageDrawable(getActivity().getDrawable(R.drawable.ic_expand_less_black_48dp));
                 } else {
-                    imageButton.setImageDrawable(getActivity().getDrawable(R.drawable.ic_expand_less_white_24dp));
+                    imageButton.setImageDrawable(getActivity().getDrawable(R.drawable.ic_expand_less_white_48dp));
                 }
                 break;
             case 2:
