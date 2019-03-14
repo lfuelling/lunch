@@ -7,13 +7,17 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import java.util.Objects;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicReference;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import sh.lrk.lunch.R;
 import sh.lrk.lunch.app.settings.SettingsActivity;
 
@@ -41,11 +45,12 @@ public class AppDataThread extends Thread {
     public void run() {
         if (packageName.equals(appInfo.packageName)) {
             // launch settings instead of launcher
-            target.add(new AppData(R.drawable.ic_settings_deep_purple_a700_24dp, settingsTitle, new Intent(contextRef.get().getApplicationContext(), SettingsActivity.class), appInfo));
+            target.add(new AppData(getSettingsIconBitmap(contextRef.get()), settingsTitle, new Intent(contextRef.get().getApplicationContext(), SettingsActivity.class), appInfo));
         } else {
             Intent defaultLaunchIntent = packageManager.getLaunchIntentForPackage(appInfo.packageName);
             Intent fTargetIntent = tryToFindDefaultIntent(appInfo, defaultLaunchIntent, packageManager);
-            target.add(new AppData(packageManager.getApplicationLabel(appInfo).toString(), fTargetIntent, appInfo));
+
+            target.add(new AppData(getBitmapFromVectorDrawable(packageManager.getApplicationIcon(appInfo)), packageManager.getApplicationLabel(appInfo).toString(), fTargetIntent, appInfo));
         }
     }
 
@@ -77,5 +82,19 @@ public class AppDataThread extends Thread {
             }
         }
         return targetIntent;
+    }
+
+    private static Bitmap getSettingsIconBitmap(Context context) {
+        Drawable drawable = Objects.requireNonNull(ContextCompat.getDrawable(context, R.drawable.ic_settings_deep_purple_a700_24dp));
+        return getBitmapFromVectorDrawable(drawable);
+    }
+
+    private static Bitmap getBitmapFromVectorDrawable(Drawable drawable) {
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
     }
 }

@@ -2,10 +2,10 @@ package sh.lrk.lunch.app.main.launcher;
 
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -21,31 +21,19 @@ public class AppData implements Parcelable {
         }
     };
 
-    @DrawableRes
-    private final int drawable;
+    private final Bitmap drawable;
     private final String label;
     private final Intent intent;
     private final ApplicationInfo applicationInfo;
 
-    public AppData(@DrawableRes int drawable, String label, Intent intent, ApplicationInfo applicationInfo) {
+    public AppData(Bitmap drawable, String label, Intent intent, ApplicationInfo applicationInfo) {
         this.drawable = drawable;
         this.label = label;
         this.intent = intent;
         this.applicationInfo = applicationInfo;
     }
 
-    public AppData(String label, Intent intent, ApplicationInfo appInfo) {
-        this.label = label;
-        this.intent = intent;
-        this.applicationInfo = appInfo;
-        this.drawable = -1;
-    }
-
-    @DrawableRes
-    public int getDrawable() throws UseDefaultDrawableException {
-        if(drawable == -1) {
-            throw new UseDefaultDrawableException();
-        }
+    public Bitmap getDrawable() {
         return drawable;
     }
 
@@ -71,14 +59,14 @@ public class AppData implements Parcelable {
         dest.writeString(label);
         dest.writeTypedObject(intent, flags);
         dest.writeTypedObject(applicationInfo, flags);
-        dest.writeInt(drawable);
+        dest.writeTypedObject(drawable, flags);
     }
 
     private AppData(Parcel parcel) {
         label = parcel.readString();
         intent = parcel.readTypedObject(Intent.CREATOR);
         applicationInfo = parcel.readTypedObject(ApplicationInfo.CREATOR);
-        drawable = parcel.readInt();
+        drawable = parcel.readTypedObject(Bitmap.CREATOR);
     }
 
     @NonNull
@@ -93,11 +81,5 @@ public class AppData implements Parcelable {
             return applicationInfo.packageName.equals(((AppData) obj).applicationInfo.packageName);
         }
         return false;
-    }
-
-    class UseDefaultDrawableException extends Exception {
-        public UseDefaultDrawableException() {
-            super("Use the icon provided by ApplicationInfo!");
-        }
     }
 }
