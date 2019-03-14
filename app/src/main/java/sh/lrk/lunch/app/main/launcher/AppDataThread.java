@@ -22,7 +22,6 @@ public class AppDataThread extends Thread {
 
     private final PackageManager packageManager;
     private final String packageName;
-    private final Drawable settingsDrawable;
     private final String settingsTitle;
     private final ApplicationInfo appInfo;
     private final Vector<AppData> target;
@@ -33,7 +32,6 @@ public class AppDataThread extends Thread {
         this.packageManager = context.getPackageManager();
         this.contextRef = new AtomicReference<>(context);
 
-        this.settingsDrawable = context.getDrawable(R.drawable.ic_settings_deep_purple_a700_24dp);
         this.settingsTitle = context.getString(R.string.title_activity_settings);
         this.appInfo = appInfo;
         this.target = target;
@@ -43,11 +41,11 @@ public class AppDataThread extends Thread {
     public void run() {
         if (packageName.equals(appInfo.packageName)) {
             // launch settings instead of launcher
-            target.add(new AppData(settingsDrawable, settingsTitle, new Intent(contextRef.get().getApplicationContext(), SettingsActivity.class), appInfo));
+            target.add(new AppData(R.drawable.ic_settings_deep_purple_a700_24dp, settingsTitle, new Intent(contextRef.get().getApplicationContext(), SettingsActivity.class), appInfo));
         } else {
             Intent defaultLaunchIntent = packageManager.getLaunchIntentForPackage(appInfo.packageName);
             Intent fTargetIntent = tryToFindDefaultIntent(appInfo, defaultLaunchIntent, packageManager);
-            target.add(new AppData(packageManager.getApplicationIcon(appInfo), packageManager.getApplicationLabel(appInfo).toString(), fTargetIntent, appInfo));
+            target.add(new AppData(packageManager.getApplicationLabel(appInfo).toString(), fTargetIntent, appInfo));
         }
     }
 

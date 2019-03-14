@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.GridView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +21,7 @@ public class AppFetcherTask extends AsyncTask<Void, Void, List<AppData>> {
     private final AtomicReference<Context> contextRef;
     private final AtomicReference<AppsListAdapter> appsListAdapterRef;
 
-    public AppFetcherTask(Context context, Vector<AppData> appDataVector, boolean showAllApps, AppsListAdapter appsListAdapter) {
+    AppFetcherTask(Context context, Vector<AppData> appDataVector, boolean showAllApps, AppsListAdapter appsListAdapter) {
         this.packageManager = context.getPackageManager();
         this.appDataVector = appDataVector;
         this.showAllApps = showAllApps;
@@ -49,14 +47,5 @@ public class AppFetcherTask extends AsyncTask<Void, Void, List<AppData>> {
         do { /* Wait for other tasks */ } while ((appDataVector.size() + 1) < tasksStarted);
         ArrayList<AppData> list = new ArrayList<>(appDataVector);
         return Collections.unmodifiableList(list);
-    }
-
-    @Override
-    protected void onPostExecute(List<AppData> res) {
-        AppsListAdapter appsListAdapter = appsListAdapterRef.get();
-        for (AppData re : res) {
-            appsListAdapter.add(re);
-        }
-        appsListAdapter.sort((o1, o2) -> o1.getLabel().compareToIgnoreCase(o2.getLabel()));
     }
 }

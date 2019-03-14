@@ -65,7 +65,11 @@ public class AppsListAdapter extends ArrayAdapter<AppData> {
         appTitle.setTextColor(appTitleColor);
 
         appTitle.setText(appData.getLabel());
-        appImage.setImageDrawable(appData.getDrawable());
+        try {
+            appImage.setImageDrawable(getContext().getDrawable(appData.getDrawable()));
+        } catch (AppData.UseDefaultDrawableException e) {
+            appImage.setImageDrawable(appData.getApplicationInfo().loadIcon(getContext().getPackageManager()));
+        }
         view.setOnClickListener(v -> getContext().startActivity(appData.getIntent()));
         view.setOnLongClickListener(v -> {
             PopupMenu popup = new PopupMenu(getContext(), v);

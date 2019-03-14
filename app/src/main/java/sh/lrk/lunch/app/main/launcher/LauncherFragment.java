@@ -7,6 +7,7 @@ import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,6 +35,7 @@ import static sh.lrk.lunch.app.settings.SettingsActivity.KEY_SHOW_ALL_APPS;
 public class LauncherFragment extends Fragment {
 
     private static final String TAG = LauncherFragment.class.getCanonicalName();
+    private static final String KEY_APP_VECTOR = "app_vector";
 
     private SharedPreferences defaultSharedPreferences;
     private RelativeLayout launcherView;
@@ -62,6 +64,9 @@ public class LauncherFragment extends Fragment {
 
         GridView grid = launcherView.findViewById(R.id.appsList);
         adapter = new AppsListAdapter(getActivity());
+        ArrayList<AppData> appVector = getArguments().getParcelableArrayList(KEY_APP_VECTOR);
+        adapter.addAll(appVector);
+        adapter.sort((o1, o2) -> o1.getLabel().compareToIgnoreCase(o2.getLabel()));
         grid.setAdapter(adapter);
         boolean showAllApps = defaultSharedPreferences.getBoolean(KEY_SHOW_ALL_APPS, false);
         new AppFetcherTask(getContext(), appDataVector, showAllApps, adapter).execute();
