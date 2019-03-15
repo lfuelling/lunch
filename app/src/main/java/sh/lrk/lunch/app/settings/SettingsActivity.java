@@ -97,9 +97,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Col
     @Override
     public void onDialogDismissed(int dialogId) {
         if (dialogId == backgroundColorPickerId) {
-            //backgroundColorPicker.dismiss();
+
         } else if (dialogId == textColorPickerId) {
-            //textColorPicker.dismiss();
+
         } else {
             Log.w(TAG, "Unknown dialogId!");
         }

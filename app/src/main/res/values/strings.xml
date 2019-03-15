@@ -92,7 +92,10 @@
     <string name="uninstall">Uninstall</string>
     <string name="show_app_info">App info</string>
     <string name="swipe_down_hint">Swipe Down Hint</string>
-    <string name="loading_applications">Loading Applications...</string>
+    <string name="loading_applications">Loading Applications…</string>
+    <string name="choose_wallpaper">Choose Wallpaper</string>
+    <string name="app_icon">App Icon</string>
+    <string name="app_title">Application Title</string>
 
     <string-array name="pref_app_icon_type_titles">
         <item>Widgets</item>
