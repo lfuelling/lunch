@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements GestureResponder 
                         startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                         return true;
                     case R.id.action_background:
-                        startActivity(new Intent(Intent.ACTION_SET_WALLPAPER));
+                        startActivity(Intent.createChooser(new Intent(Intent.ACTION_SET_WALLPAPER), getString(R.string.choose_wallpaper)));
                         return true;
                     default:
                         return false;
