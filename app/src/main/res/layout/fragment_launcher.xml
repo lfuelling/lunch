@@ -21,9 +21,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:columnWidth="85dp"
+        android:columnWidth="@dimen/app_entry_width"
         android:numColumns="auto_fit"
-        android:verticalSpacing="32dp"
+        android:verticalSpacing="16dp"
         android:stretchMode="spacingWidth"
         android:layout_marginTop="40dp"
         android:padding="@dimen/defaultMargin"/>

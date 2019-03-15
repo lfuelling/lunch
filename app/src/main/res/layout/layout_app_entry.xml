@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="85dp"
+    android:layout_width="@dimen/app_entry_width"
     android:layout_height="75dp"
     android:layout_margin="4dp"
     tools:context=".app.main.launcher.LauncherFragment">

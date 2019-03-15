@@ -2,4 +2,5 @@
 <resources>
 
     <dimen name="defaultMargin">8dp</dimen>
+    <dimen name="app_entry_width">85dp</dimen>
 </resources>
