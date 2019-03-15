@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements GestureResponder 
         ft.commit();
 
         Snackbar loadingAppsSnackbar = Snackbar.make(findViewById(R.id.main_container), R.string.loading_applications, Snackbar.LENGTH_INDEFINITE);
+        loadingAppsSnackbar.show();
 
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         boolean showAllApps = defaultSharedPreferences.getBoolean(KEY_SHOW_ALL_APPS, false);
