@@ -13,14 +13,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.PopupMenu;
+
 import java.util.ArrayList;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.PopupMenu;
 import sh.lrk.lunch.R;
 
 import static sh.lrk.lunch.app.settings.SettingsActivity.DEFAULT_TEXT_COLOR;
+import static sh.lrk.lunch.app.settings.SettingsActivity.DEFAULT_TEXT_SIZE;
 import static sh.lrk.lunch.app.settings.SettingsActivity.KEY_LAUNCHER_TEXT_COLOR;
+import static sh.lrk.lunch.app.settings.SettingsActivity.KEY_LAUNCHER_TEXT_SIZE;
 
 public class AppsListAdapter extends ArrayAdapter<AppData> {
 
@@ -28,12 +30,18 @@ public class AppsListAdapter extends ArrayAdapter<AppData> {
 
     private final LayoutInflater inflater;
     private final int appTitleColor;
+    private final int appTitleSize;
 
     AppsListAdapter(Activity a) {
         super(a, R.layout.layout_app_entry, new ArrayList<>());
         inflater = a.getLayoutInflater();
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext().getApplicationContext());
         appTitleColor = defaultSharedPreferences.getInt(KEY_LAUNCHER_TEXT_COLOR, DEFAULT_TEXT_COLOR);
+        String textSize = defaultSharedPreferences.getString(KEY_LAUNCHER_TEXT_SIZE, DEFAULT_TEXT_SIZE);
+        if (textSize == null) {
+            textSize = "2";
+        }
+        appTitleSize = Integer.parseInt(textSize);
     }
 
     @androidx.annotation.NonNull
@@ -60,6 +68,22 @@ public class AppsListAdapter extends ArrayAdapter<AppData> {
 
         if (isConvertView && appTitle.getText().equals(appData.getLabel())) {
             return view;
+        }
+
+        switch (appTitleSize) {
+            case 0: //small
+                appTitle.setTextSize(12);
+                break;
+            case 2: //large
+                appTitle.setTextSize(16);
+                break;
+            case 3: //huge
+                appTitle.setTextSize(18);
+                break;
+            case 1: //medium
+            default:
+                appTitle.setTextSize(14);
+                break;
         }
 
         appTitle.setTextColor(appTitleColor);

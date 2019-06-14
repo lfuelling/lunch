@@ -23,6 +23,16 @@
 
     <ListPreference
         android:defaultValue="0"
+        android:entries="@array/pref_text_size_titles"
+        android:entryValues="@array/pref_text_size_values"
+        android:key="launcher_text_size"
+        android:negativeButtonText="@string/cancel"
+        android:positiveButtonText="@string/okay"
+        android:title="@string/pref_title_text_size"
+        android:summary="@string/pref_description_text_size"/>
+
+    <ListPreference
+        android:defaultValue="0"
         android:entries="@array/pref_app_icon_type_titles"
         android:entryValues="@array/pref_app_icon_type_values"
         android:key="app_icon_type"

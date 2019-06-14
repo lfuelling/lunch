@@ -31,12 +31,14 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Col
     public static final String KEY_BLACK_APPS_BTN = "black_apps_icon";
     public static final String KEY_APP_ICON_TYPE = "app_icon_type";
     public static final String KEY_SWIPE_INSTEAD_OF_PRESS = "swipe_instead_of_press";
+    public static final String KEY_LAUNCHER_TEXT_SIZE = "launcher_text_size";
 
     public static final int DEFAULT_LAUNCHER_BACKGROUND = 0x00000022;
     public static final int DEFAULT_TEXT_COLOR = 0xFFFFFFFF;
     public static final String DEFAULT_APP_ICON_TYPE = "0";
     public static final int BACKGROUND_DIALOG_ID = 2;
     public static final int TEXT_COLOR_DIALOG_ID = 1;
+    public static final String DEFAULT_TEXT_SIZE = "2";
 
     private static ColorPreference backgroundColorPreference;
     private static ColorPreference textColorPreference;
