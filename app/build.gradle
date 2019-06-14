@@ -10,13 +10,26 @@ android {
         versionCode 3
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        dexOptions {
+            preDexLibraries = false
+            javaMaxHeapSize "4g"
+        }
     }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
+    lintOptions {
+        abortOnError false // fuck lint
+    }
+    productFlavors {
+    }
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+    }
     signingConfigs {
         release
     }
