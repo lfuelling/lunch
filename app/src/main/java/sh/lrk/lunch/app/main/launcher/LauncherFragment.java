@@ -19,11 +19,13 @@ import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import sh.lrk.lunch.R;
 import sh.lrk.lunch.app.main.MainActivity;
 
@@ -37,10 +39,7 @@ public class LauncherFragment extends Fragment {
     private static final String TAG = LauncherFragment.class.getCanonicalName();
     public static final String KEY_APP_VECTOR = "app_vector";
 
-    private SharedPreferences defaultSharedPreferences;
     private RelativeLayout launcherView;
-
-    private AppsListAdapter adapter;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -48,7 +47,7 @@ public class LauncherFragment extends Fragment {
 
         launcherView.setPadding(0, getStatusBarHeight(), 0, 0);
 
-        defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext().getApplicationContext());
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext().getApplicationContext());
 
         int color = defaultSharedPreferences.getInt(KEY_LAUNCHER_BACKGROUND, DEFAULT_LAUNCHER_BACKGROUND);
         launcherView.setBackground(new ColorDrawable(color));
@@ -63,9 +62,9 @@ public class LauncherFragment extends Fragment {
         }
 
         GridView grid = launcherView.findViewById(R.id.appsList);
-        adapter = new AppsListAdapter(getActivity());
+        AppsListAdapter adapter = new AppsListAdapter(getActivity());
         ArrayList<AppData> appVector = getArguments().getParcelableArrayList(KEY_APP_VECTOR);
-        adapter.addAll(appVector);
+        adapter.addAll(Objects.requireNonNull(appVector));
         adapter.sort((o1, o2) -> o1.getLabel().compareToIgnoreCase(o2.getLabel()));
         grid.setAdapter(adapter);
     }

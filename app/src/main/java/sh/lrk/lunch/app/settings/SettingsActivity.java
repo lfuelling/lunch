@@ -15,6 +15,7 @@ import com.github.danielnilsson9.colorpickerview.dialog.ColorPickerDialogFragmen
 import com.github.danielnilsson9.colorpickerview.preference.ColorPreference;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import androidx.appcompat.app.ActionBar;
 import sh.lrk.lunch.R;
@@ -34,11 +35,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Col
     public static final int DEFAULT_LAUNCHER_BACKGROUND = 0x00000022;
     public static final int DEFAULT_TEXT_COLOR = 0xFFFFFFFF;
     public static final String DEFAULT_APP_ICON_TYPE = "0";
+    public static final int BACKGROUND_DIALOG_ID = 2;
+    public static final int TEXT_COLOR_DIALOG_ID = 1;
 
     private static ColorPreference backgroundColorPreference;
     private static ColorPreference textColorPreference;
-    private static int backgroundColorPickerId;
-    private static int textColorPickerId;
+    private static AtomicReference<ColorPickerDialogFragment> backgroundColorPickerRef;
+    private static AtomicReference<ColorPickerDialogFragment> textColorPickerRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,9 +88,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Col
 
     @Override
     public void onColorSelected(int dialogId, int color) {
-        if (dialogId == backgroundColorPickerId) {
+        if (dialogId == BACKGROUND_DIALOG_ID) {
             backgroundColorPreference.saveValue(color);
-        } else if (dialogId == textColorPickerId) {
+        } else if (dialogId == TEXT_COLOR_DIALOG_ID) {
             textColorPreference.saveValue(color);
         } else {
             Log.w(TAG, "Unknown dialogId!");
@@ -96,10 +99,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Col
 
     @Override
     public void onDialogDismissed(int dialogId) {
-        if (dialogId == backgroundColorPickerId) {
-
-        } else if (dialogId == textColorPickerId) {
-
+        if (dialogId == BACKGROUND_DIALOG_ID) {
+            backgroundColorPickerRef.get().dismiss();
+        } else if (dialogId == TEXT_COLOR_DIALOG_ID) {
+            textColorPickerRef.get().dismiss();
         } else {
             Log.w(TAG, "Unknown dialogId!");
         }
@@ -137,8 +140,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Col
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class CustomizationPreferenceFragment extends PreferenceFragment {
 
-        private ColorPickerDialogFragment backgroundColorPicker;
-        private ColorPickerDialogFragment textColorPicker;
         private SharedPreferences sharedPreferences;
 
         @Override
@@ -156,27 +157,25 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Col
         private void buildBackgroundColorPreference() {
             backgroundColorPreference = (ColorPreference) findPreference(KEY_LAUNCHER_BACKGROUND);
             int backgroundColor = sharedPreferences.getInt(KEY_LAUNCHER_BACKGROUND, DEFAULT_LAUNCHER_BACKGROUND);
-            backgroundColorPicker = ColorPickerDialogFragment.newInstance(2,
+            backgroundColorPickerRef = new AtomicReference<>(ColorPickerDialogFragment.newInstance(BACKGROUND_DIALOG_ID,
                     backgroundColorPreference.getKey(),
                     getString(R.string.okay),
                     backgroundColor,
-                    true);
-            backgroundColorPickerId = backgroundColorPicker.getId();
+                    true));
             backgroundColorPreference.setOnShowDialogListener((title, color) ->
-                    backgroundColorPicker.show(getFragmentManager(), title));
+                    backgroundColorPickerRef.get().show(getFragmentManager(), title));
         }
 
         private void buildTextColorPreference() {
             textColorPreference = (ColorPreference) findPreference(KEY_LAUNCHER_TEXT_COLOR);
             int textColor = sharedPreferences.getInt(KEY_LAUNCHER_TEXT_COLOR, DEFAULT_TEXT_COLOR);
-            textColorPicker = ColorPickerDialogFragment.newInstance(1,
+            textColorPickerRef = new AtomicReference<>(ColorPickerDialogFragment.newInstance(TEXT_COLOR_DIALOG_ID,
                     textColorPreference.getKey(),
                     getString(R.string.okay),
                     textColor,
-                    true);
-            textColorPickerId = textColorPicker.getId();
+                    true));
             textColorPreference.setOnShowDialogListener((title, color) ->
-                    textColorPicker.show(getFragmentManager(), title));
+                    textColorPickerRef.get().show(getFragmentManager(), title));
         }
 
         @Override
