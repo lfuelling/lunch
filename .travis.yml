@@ -1,17 +1,34 @@
 language: android
 android:
   components:
-    - build-tools-28.0.3
-    - android-28
-    - extra-google-google_play_services
-    - extra-google-m2repository
-    - extra-android-m2repository
-    - addon-google_apis-google-28
-    - sys-img-armeabi-v7a-android-24
+  - build-tools-28.0.3
+  - android-28
+  - extra-google-google_play_services
+  - extra-google-m2repository
+  - extra-android-m2repository
+  - addon-google_apis-google-28
+  - sys-img-armeabi-v7a-android-24
+
 env:
   global:
-    - ADB_INSTALL_TIMEOUT=8
-script:
-  - "./gradlew build -S"
-  - "./gradlew assembleRelease"
+  - ADB_INSTALL_TIMEOUT=8
 
+script:
+- "./gradlew build -S"
+- "./gradlew assembleRelease"
+
+before_install:
+- openssl aes-256-cbc -K $encrypted_91e3fa002a69_key -iv $encrypted_91e3fa002a69_iv
+  -in keystore.jks.enc -out keystore.jks -d
+
+deploy:
+  provider: releases
+  overwrite: true
+  file_glob: true
+  skip_cleanup: true
+  api_key:
+    secure: ef3+HyPB1gF5UEr/j0pDlXPcS/sKgWi3xKsyiaNUTrYrT0icPW1iNIe6V8heuPgiPAJz/0xe0SltadIygN+3JrlJ3/TcuWr3MKjvcedowrnuML8r+G9ZkZha5wKEpPKHMseLsH2koSBWgaEbyPWlE4p0Dwa+7f3ZmqSEYhCHGhbtWUh25m0EE65nGzxjt1L95L+FR305noIk+AfcKDNrbW+R1Ik8USJy7mmnpcX4S1GjR9T3eJWu2PEbsZCNtwk2MwbQpKLwMPWrrWtC6SMMsThWH5m5xKiyAckxfSbHz1YRHCAZZa3gJLMqBKV8p9W4svO4x9worNsPm+WGVDs+55eisUM2diMUk5LS3b0mVdYRpWHJQRAWDrTamoi8S6aNPhhD66z3xM7+6BOIS00ac+t1kVg5DGQ5wJbv3QEOCtyv2h6Z5dAWSML4cQc/+UuLrHNGEN3Jl4s2FNfUQFuE57EGbf41BVjnNqyMpUwRT2pS6FsYLVSmZxb+mn1A4P5rGklO5QSVgIafI55G4wkqQF31tnQtt1Sg9hS0/J06t93D43kxLwrMWFzw3FKg9ak4zySUdHYumIf/t6o8tp+gBwZqqQOLs2AmrmZiWN1B8fRr/wtmr9vOihV9VkRL/S2kOkyKH4nlDJYVnP17o+ktSobjxsBMt6nvL8M85SQHw70=
+  file: "/home/travis/build/lfuelling/lunch/app/build/outputs/apk/release/*.apk"
+  on:
+    repo: lfuelling/lunch
+    tags: true
