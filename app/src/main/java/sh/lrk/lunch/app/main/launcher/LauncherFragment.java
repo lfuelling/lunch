@@ -62,7 +62,7 @@ public class LauncherFragment extends Fragment {
         }
 
         GridView grid = launcherView.findViewById(R.id.appsList);
-        AppsListAdapter adapter = new AppsListAdapter(getActivity());
+        AppsListAdapter adapter = new AppsListAdapter((MainActivity) getActivity());
         ArrayList<AppData> appVector = getArguments().getParcelableArrayList(KEY_APP_VECTOR);
         adapter.addAll(Objects.requireNonNull(appVector));
         adapter.sort((o1, o2) -> o1.getLabel().compareToIgnoreCase(o2.getLabel()));

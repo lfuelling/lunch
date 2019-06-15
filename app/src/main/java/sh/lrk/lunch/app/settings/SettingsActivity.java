@@ -44,8 +44,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Col
     public static final int BACKGROUND_DIALOG_ID = 2;
     public static final int TEXT_COLOR_DIALOG_ID = 1;
     public static final String DEFAULT_TEXT_SIZE = "2";
-    public static final int DEFAULT_MIN_SWIPE_DISTANCE = 100;
-    public static final int DEFAULT_MAX_SWIPE_DISTANCE = 1000;
+    public static final String DEFAULT_MIN_SWIPE_DISTANCE = "100";
+    public static final String DEFAULT_MAX_SWIPE_DISTANCE = "1000";
 
     private static ColorPreference backgroundColorPreference;
     private static ColorPreference textColorPreference;
@@ -146,12 +146,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Col
             minSwipeDistancePreference = (EditTextPreference) findPreference(KEY_MIN_SWIPE_DISTANCE);
             maxSwipeDistancePreference = (EditTextPreference) findPreference(KEY_MAX_SWIPE_DISTANCE);
 
-            minSwipeDistancePreference.setEnabled(swipeInsteadOfPressPreference.isEnabled());
-            maxSwipeDistancePreference.setEnabled(swipeInsteadOfPressPreference.isEnabled());
+            minSwipeDistancePreference.setEnabled(swipeInsteadOfPressPreference.isChecked());
+            maxSwipeDistancePreference.setEnabled(swipeInsteadOfPressPreference.isChecked());
 
             swipeInsteadOfPressPreference.setOnPreferenceChangeListener((p, v) -> {
-                minSwipeDistancePreference.setEnabled(p.isEnabled());
-                maxSwipeDistancePreference.setEnabled(p.isEnabled());
+                minSwipeDistancePreference.setEnabled((Boolean) v);
+                maxSwipeDistancePreference.setEnabled((Boolean) v);
                 return true;
             });
         }

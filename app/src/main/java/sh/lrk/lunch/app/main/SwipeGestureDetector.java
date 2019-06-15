@@ -32,16 +32,26 @@ public class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListene
     // Source gestureResponder that display message in text view.
     private final GestureResponder gestureResponder;
 
-    SwipeGestureDetector(@NonNull GestureResponder gestureResponder, @NonNull Context context) {
-        this.gestureResponder = gestureResponder;
+    SwipeGestureDetector(@NonNull MainActivity activity) {
+        this.gestureResponder = activity;
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
 
-        MIN_SWIPE_DISTANCE_X = preferences.getInt(KEY_MIN_SWIPE_DISTANCE, DEFAULT_MIN_SWIPE_DISTANCE);
-        MIN_SWIPE_DISTANCE_Y = preferences.getInt(KEY_MIN_SWIPE_DISTANCE, DEFAULT_MIN_SWIPE_DISTANCE);
+        String minSwipeDistancePref = preferences.getString(KEY_MIN_SWIPE_DISTANCE, DEFAULT_MIN_SWIPE_DISTANCE);
+        if (minSwipeDistancePref == null) {
+            minSwipeDistancePref = DEFAULT_MIN_SWIPE_DISTANCE;
+        }
+        int minSwipeDistance = Integer.parseInt(minSwipeDistancePref);
+        MIN_SWIPE_DISTANCE_X = minSwipeDistance;
+        MIN_SWIPE_DISTANCE_Y = minSwipeDistance;
 
-        MAX_SWIPE_DISTANCE_X = preferences.getInt(KEY_MAX_SWIPE_DISTANCE, DEFAULT_MAX_SWIPE_DISTANCE);
-        MAX_SWIPE_DISTANCE_Y = preferences.getInt(KEY_MAX_SWIPE_DISTANCE, DEFAULT_MAX_SWIPE_DISTANCE);
+        String maxSwipeDistancePref = preferences.getString(KEY_MAX_SWIPE_DISTANCE, DEFAULT_MAX_SWIPE_DISTANCE);
+        if (maxSwipeDistancePref == null) {
+            maxSwipeDistancePref = DEFAULT_MAX_SWIPE_DISTANCE;
+        }
+        int maxSwipeDistance = Integer.parseInt(maxSwipeDistancePref);
+        MAX_SWIPE_DISTANCE_X = maxSwipeDistance;
+        MAX_SWIPE_DISTANCE_Y = maxSwipeDistance;
     }
 
     /* This method is invoked when a swipe gesture happened. */
