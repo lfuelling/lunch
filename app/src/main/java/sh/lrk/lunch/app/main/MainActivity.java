@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements GestureResponder 
 
     @Override
     public void handleDownSwipe() {
-        replaceFragment(homeScreenFragment);
+        hideAppDrawer();
     }
 
     @Override
@@ -146,5 +146,9 @@ public class MainActivity extends AppCompatActivity implements GestureResponder 
         } else {
             Log.d(TAG, "Launcher not fully initialized!");
         }
+    }
+
+    public void hideAppDrawer() {
+        replaceFragment(homeScreenFragment);
     }
 }

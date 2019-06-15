@@ -18,6 +18,7 @@ import androidx.appcompat.widget.PopupMenu;
 import java.util.ArrayList;
 
 import sh.lrk.lunch.R;
+import sh.lrk.lunch.app.main.MainActivity;
 
 import static sh.lrk.lunch.app.settings.SettingsActivity.DEFAULT_TEXT_COLOR;
 import static sh.lrk.lunch.app.settings.SettingsActivity.DEFAULT_TEXT_SIZE;
@@ -29,12 +30,14 @@ public class AppsListAdapter extends ArrayAdapter<AppData> {
     private static final String TAG = AppsListAdapter.class.getCanonicalName();
 
     private final LayoutInflater inflater;
+    private final MainActivity activity;
     private final int appTitleColor;
     private final int appTitleSize;
 
-    AppsListAdapter(Activity a) {
+    AppsListAdapter(MainActivity a) {
         super(a, R.layout.layout_app_entry, new ArrayList<>());
         inflater = a.getLayoutInflater();
+        activity = a;
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext().getApplicationContext());
         appTitleColor = defaultSharedPreferences.getInt(KEY_LAUNCHER_TEXT_COLOR, DEFAULT_TEXT_COLOR);
         String textSize = defaultSharedPreferences.getString(KEY_LAUNCHER_TEXT_SIZE, DEFAULT_TEXT_SIZE);
@@ -90,7 +93,10 @@ public class AppsListAdapter extends ArrayAdapter<AppData> {
 
         appTitle.setText(appData.getLabel());
         appImage.setImageBitmap(appData.getDrawable());
-        view.setOnClickListener(v -> getContext().startActivity(appData.getIntent()));
+        view.setOnClickListener(v -> {
+            activity.hideAppDrawer();
+            getContext().startActivity(appData.getIntent());
+        });
         view.setOnLongClickListener(v -> {
             PopupMenu popup = new PopupMenu(getContext(), v);
             popup.setOnMenuItemClickListener(item -> {
