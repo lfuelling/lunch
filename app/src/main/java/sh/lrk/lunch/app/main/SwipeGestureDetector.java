@@ -1,32 +1,47 @@
 package sh.lrk.lunch.app.main;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 
-/**
- * Created by Jerry on 4/18/2018.
- */
+import static sh.lrk.lunch.app.settings.SettingsActivity.DEFAULT_MAX_SWIPE_DISTANCE;
+import static sh.lrk.lunch.app.settings.SettingsActivity.DEFAULT_MIN_SWIPE_DISTANCE;
+import static sh.lrk.lunch.app.settings.SettingsActivity.KEY_MAX_SWIPE_DISTANCE;
+import static sh.lrk.lunch.app.settings.SettingsActivity.KEY_MIN_SWIPE_DISTANCE;
 
+/**
+ * Listener for the app drawer swipes.
+ */
 public class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListener {
 
     private static final String TAG = SwipeGestureDetector.class.getCanonicalName();
 
     // Minimal x and y axis swipe distance.
-    private static int MIN_SWIPE_DISTANCE_X = 100;
-    private static int MIN_SWIPE_DISTANCE_Y = 100;
+    private final int MIN_SWIPE_DISTANCE_X;
+    private final int MIN_SWIPE_DISTANCE_Y;
 
     // Maximal x and y axis swipe distance.
-    private static int MAX_SWIPE_DISTANCE_X = 1000;
-    private static int MAX_SWIPE_DISTANCE_Y = 1000;
+    private final int MAX_SWIPE_DISTANCE_X;
+    private final int MAX_SWIPE_DISTANCE_Y;
 
-    // Source activity that display message in text view.
-    private final GestureResponder activity;
+    // Source gestureResponder that display message in text view.
+    private final GestureResponder gestureResponder;
 
-    public SwipeGestureDetector(@NonNull GestureResponder activity) {
-        this.activity = activity;
+    SwipeGestureDetector(@NonNull GestureResponder gestureResponder, @NonNull Context context) {
+        this.gestureResponder = gestureResponder;
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        MIN_SWIPE_DISTANCE_X = preferences.getInt(KEY_MIN_SWIPE_DISTANCE, DEFAULT_MIN_SWIPE_DISTANCE);
+        MIN_SWIPE_DISTANCE_Y = preferences.getInt(KEY_MIN_SWIPE_DISTANCE, DEFAULT_MIN_SWIPE_DISTANCE);
+
+        MAX_SWIPE_DISTANCE_X = preferences.getInt(KEY_MAX_SWIPE_DISTANCE, DEFAULT_MAX_SWIPE_DISTANCE);
+        MAX_SWIPE_DISTANCE_Y = preferences.getInt(KEY_MAX_SWIPE_DISTANCE, DEFAULT_MAX_SWIPE_DISTANCE);
     }
 
     /* This method is invoked when a swipe gesture happened. */
@@ -54,9 +69,9 @@ public class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListene
 
         if ((deltaYAbs >= MIN_SWIPE_DISTANCE_Y) && (deltaYAbs <= MAX_SWIPE_DISTANCE_Y)) {
             if (deltaY > 0) {
-                this.activity.handleUpSwipe();
+                this.gestureResponder.handleUpSwipe();
             } else {
-                this.activity.handleDownSwipe();
+                this.gestureResponder.handleDownSwipe();
             }
         }
 
@@ -79,6 +94,6 @@ public class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListene
 
     @Override
     public void onLongPress(MotionEvent e) {
-        this.activity.handleLongPress();
+        this.gestureResponder.handleLongPress();
     }
 }

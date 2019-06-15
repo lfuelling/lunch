@@ -2,49 +2,73 @@
 
     <PreferenceScreen
         android:key="change_wallpaper"
-        android:title="@string/pref_title_change_wallpaper"
-        android:summary="@string/pref_description_change_wallpaper">
+        android:summary="@string/pref_description_change_wallpaper"
+        android:title="@string/pref_title_change_wallpaper">
         <intent android:action="android.intent.action.SET_WALLPAPER" />
     </PreferenceScreen>
 
-    <com.github.danielnilsson9.colorpickerview.preference.ColorPreference
-        android:title="@string/pref_title_launcher_background"
-        android:defaultValue="0x00000022"
-        android:key="launcher_background"
-        android:id="@+id/backgroundColorPreference"
-        android:summary="@string/pref_description_launcher_background" />
+    <PreferenceCategory android:title="@string/pref_header_customization">
 
-    <com.github.danielnilsson9.colorpickerview.preference.ColorPreference
-        android:title="@string/pref_title_launcher_text_color"
-        android:defaultValue="0xFFFFFFFF"
-        android:key="launcher_text_color"
-        android:id="@+id/textColorPreference"
-        android:summary="@string/pref_description_launcher_text_color" />
+        <com.github.danielnilsson9.colorpickerview.preference.ColorPreference
+            android:id="@+id/backgroundColorPreference"
+            android:defaultValue="0x00000022"
+            android:key="launcher_background"
+            android:summary="@string/pref_description_launcher_background"
+            android:title="@string/pref_title_launcher_background" />
 
-    <ListPreference
-        android:defaultValue="0"
-        android:entries="@array/pref_text_size_titles"
-        android:entryValues="@array/pref_text_size_values"
-        android:key="launcher_text_size"
-        android:negativeButtonText="@string/cancel"
-        android:positiveButtonText="@string/okay"
-        android:title="@string/pref_title_text_size"
-        android:summary="@string/pref_description_text_size"/>
+        <com.github.danielnilsson9.colorpickerview.preference.ColorPreference
+            android:id="@+id/textColorPreference"
+            android:defaultValue="0xFFFFFFFF"
+            android:key="launcher_text_color"
+            android:summary="@string/pref_description_launcher_text_color"
+            android:title="@string/pref_title_launcher_text_color" />
 
-    <ListPreference
-        android:defaultValue="0"
-        android:entries="@array/pref_app_icon_type_titles"
-        android:entryValues="@array/pref_app_icon_type_values"
-        android:key="app_icon_type"
-        android:negativeButtonText="@string/cancel"
-        android:positiveButtonText="@string/okay"
-        android:title="@string/pref_title_app_icon_type"
-        android:summary="@string/pref_description_app_icon_type"/>
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/pref_text_size_titles"
+            android:entryValues="@array/pref_text_size_values"
+            android:key="launcher_text_size"
+            android:negativeButtonText="@string/cancel"
+            android:positiveButtonText="@string/okay"
+            android:summary="@string/pref_description_text_size"
+            android:title="@string/pref_title_text_size" />
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="black_apps_icon"
-        android:summary="@string/pref_description_black_apps_icon"
-        android:title="@string/pref_title_black_apps_icon" />
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/pref_app_icon_type_titles"
+            android:entryValues="@array/pref_app_icon_type_values"
+            android:key="app_icon_type"
+            android:negativeButtonText="@string/cancel"
+            android:positiveButtonText="@string/okay"
+            android:summary="@string/pref_description_app_icon_type"
+            android:title="@string/pref_title_app_icon_type" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="black_apps_icon"
+            android:summary="@string/pref_description_black_apps_icon"
+            android:title="@string/pref_title_black_apps_icon" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="swipe_instead_of_press"
+            android:summary="@string/pref_description_swipe_instead_of_press"
+            android:title="@string/pref_title_swipe_instead_of_press" />
+
+        <EditTextPreference
+            android:inputType="number"
+            android:defaultValue="100"
+            android:key="min_swipe_distance"
+            android:summary="@string/pref_description_min_swipe_distance"
+            android:title="@string/pref_title_min_swipe_distance" />
+
+        <EditTextPreference
+            android:inputType="number"
+            android:defaultValue="1000"
+            android:key="max_swipe_distance"
+            android:summary="@string/pref_description_max_swipe_distance"
+            android:title="@string/pref_title_max_swipe_distance" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

@@ -6,8 +6,10 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.preference.SwitchPreference;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import androidx.appcompat.app.ActionBar;
+
 import sh.lrk.lunch.R;
 
 
@@ -32,6 +35,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Col
     public static final String KEY_APP_ICON_TYPE = "app_icon_type";
     public static final String KEY_SWIPE_INSTEAD_OF_PRESS = "swipe_instead_of_press";
     public static final String KEY_LAUNCHER_TEXT_SIZE = "launcher_text_size";
+    public static final String KEY_MIN_SWIPE_DISTANCE = "min_swipe_distance";
+    public static final String KEY_MAX_SWIPE_DISTANCE = "max_swipe_distance";
 
     public static final int DEFAULT_LAUNCHER_BACKGROUND = 0x00000022;
     public static final int DEFAULT_TEXT_COLOR = 0xFFFFFFFF;
@@ -39,6 +44,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Col
     public static final int BACKGROUND_DIALOG_ID = 2;
     public static final int TEXT_COLOR_DIALOG_ID = 1;
     public static final String DEFAULT_TEXT_SIZE = "2";
+    public static final int DEFAULT_MIN_SWIPE_DISTANCE = 100;
+    public static final int DEFAULT_MAX_SWIPE_DISTANCE = 1000;
 
     private static ColorPreference backgroundColorPreference;
     private static ColorPreference textColorPreference;
@@ -83,7 +90,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Col
     @Override
     protected boolean isValidFragment(String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName)
-                || GeneralPreferenceFragment.class.getName().equals(fragmentName)
                 || AdvancedPreferenceFragment.class.getName().equals(fragmentName)
                 || CustomizationPreferenceFragment.class.getName().equals(fragmentName);
     }
@@ -111,31 +117,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Col
     }
 
     /**
-     * This fragment shows general preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class GeneralPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_general);
-            setHasOptionsMenu(true);
-
-        }
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                return true;
-            }
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
-    /**
      * This fragment shows notification preferences only. It is used when the
      * activity is showing a two-pane settings UI.
      */
@@ -143,6 +124,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Col
     public static class CustomizationPreferenceFragment extends PreferenceFragment {
 
         private SharedPreferences sharedPreferences;
+        private SwitchPreference swipeInsteadOfPressPreference;
+        private EditTextPreference minSwipeDistancePreference;
+        private EditTextPreference maxSwipeDistancePreference;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -154,6 +138,22 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Col
 
             buildTextColorPreference();
             buildBackgroundColorPreference();
+            buildSwipePreferences();
+        }
+
+        private void buildSwipePreferences() {
+            swipeInsteadOfPressPreference = (SwitchPreference) findPreference(KEY_SWIPE_INSTEAD_OF_PRESS);
+            minSwipeDistancePreference = (EditTextPreference) findPreference(KEY_MIN_SWIPE_DISTANCE);
+            maxSwipeDistancePreference = (EditTextPreference) findPreference(KEY_MAX_SWIPE_DISTANCE);
+
+            minSwipeDistancePreference.setEnabled(swipeInsteadOfPressPreference.isEnabled());
+            maxSwipeDistancePreference.setEnabled(swipeInsteadOfPressPreference.isEnabled());
+
+            swipeInsteadOfPressPreference.setOnPreferenceChangeListener((p, v) -> {
+                minSwipeDistancePreference.setEnabled(p.isEnabled());
+                maxSwipeDistancePreference.setEnabled(p.isEnabled());
+                return true;
+            });
         }
 
         private void buildBackgroundColorPreference() {

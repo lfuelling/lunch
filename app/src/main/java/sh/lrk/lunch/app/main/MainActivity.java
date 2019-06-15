@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements GestureResponder 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SwipeGestureDetector gestureDetector = new SwipeGestureDetector(this);
+        SwipeGestureDetector gestureDetector = new SwipeGestureDetector(this, getApplicationContext());
         gestureDetectorCompat = new GestureDetectorCompat(this, gestureDetector);
         homeScreenFragment = new HomeScreenFragment();
         fragmentManager = getFragmentManager();

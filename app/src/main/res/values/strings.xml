@@ -36,7 +36,11 @@
     <string name="app_icon">App Icon</string>
     <string name="app_title">Application Title</string>
     <string name="pref_title_text_size">Launcher Text Size</string>
-    <string name="pref_description_text_size">Change the text size.</string>
+    <string name="pref_description_text_size">Change the text size in the app drawer.</string>
+    <string name="pref_title_min_swipe_distance">Minimum Swipe Distance</string>
+    <string name="pref_description_min_swipe_distance">Minimum distance a user has to swipe to trigger the app drawer.</string>
+    <string name="pref_title_max_swipe_distance">Maximum Swipe Distance</string>
+    <string name="pref_description_max_swipe_distance">Maximum distance a user has to swipe to trigger the app drawer.</string>
 
     <string-array name="pref_app_icon_type_titles">
         <item>Widgets</item>
